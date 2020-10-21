@@ -1,9 +1,8 @@
-HELP.md
-*/target/**
 target/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+bin/
+.idea/
+.settings
+.project
+.classpath
 *.iml
-*.ipr
+*.orig
