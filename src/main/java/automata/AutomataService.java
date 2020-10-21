@@ -33,6 +33,8 @@ public class AutomataService {
 				throw new BadFileException(msj);
 			}
 			
+			List<Proyeccion> proyecciones = new ArrayList<Proyeccion>();
+			
 			while (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
 
@@ -80,7 +82,21 @@ public class AutomataService {
 						System.out.println(msj);
 						throw new BadFileException(msj);
 					}
-
+					
+					Proyeccion proyeccion = new Proyeccion();
+					
+					/***Ejemplo: 4, E -> 4***/
+					
+					String[] parts = data.split(",");
+					
+					proyeccion.setEstadoLlegada(parts[0]);
+					
+					String[] parts2 = parts[1].split("->");
+					
+					proyeccion.setSimboloInput(parts2[0].trim());
+					proyeccion.setEstadoSalida(parts2[1].trim());
+				
+					proyecciones.add(proyeccion);
 				}
 
 				System.out.println(data);
@@ -92,6 +108,9 @@ public class AutomataService {
 				String msj = "Ocurrio un error, el archivo no contenia proyecciones";
 				System.out.println(msj);
 				throw new BadFileException(msj);
+			}
+			else {
+				response.setProyecciones(proyecciones);
 			}
 		}
 		catch(FileNotFoundException e) {
