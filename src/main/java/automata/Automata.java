@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Automata {
 	
-	List<String> simbolosInput;
-	int cantEstados;
-	List<String> estadosFinales;
-	List<Proyeccion> proyecciones;
+	private List<String> simbolosInput;
+	private int cantEstados;
+	private List<String> estadosFinales;
+	private List<Proyeccion> proyecciones;
 	
 	public Automata() {
 		super();

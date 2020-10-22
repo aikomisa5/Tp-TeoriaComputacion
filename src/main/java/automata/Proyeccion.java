@@ -2,9 +2,9 @@ package automata;
 
 public class Proyeccion {
 
-	String estadoSalida;
-	String simboloInput;
-	String estadoLlegada;
+	private String estadoSalida;
+	private String simboloInput;
+	private String estadoLlegada;
 	
 	public Proyeccion() {
 		super();
