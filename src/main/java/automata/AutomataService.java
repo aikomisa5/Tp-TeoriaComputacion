@@ -44,8 +44,12 @@ public class AutomataService {
 
 				if (indice == 0) {
 					try {
-						List<String> simbolosInput = new ArrayList<String>(Arrays.asList(data.split(",")));
-						response.setSimbolosInput(simbolosInput);
+						List<String> trim = new ArrayList<String>(Arrays.asList(data.split(",")));
+						List<String> simbolos = new ArrayList<String>();
+						for(String simbolo : trim) {
+							simbolos.add(simbolo.trim());
+						}
+						response.setSimbolosInput(simbolos);
 					}
 					catch(Exception e) {
 						String msj = "Ocurrio un error al intentar obtener los datos de los simbolos de input del archivo: " + e.getMessage();
@@ -93,12 +97,12 @@ public class AutomataService {
 
 					String[] parts = data.split(",");
 
-					proyeccion.setEstadoLlegada(parts[0]);
+					proyeccion.setEstadoSalida(parts[0]);
 
 					String[] parts2 = parts[1].split("->");
 
 					proyeccion.setSimboloInput(parts2[0].trim());
-					proyeccion.setEstadoSalida(parts2[1].trim());
+					proyeccion.setEstadoLlegada(parts2[1].trim());
 
 					proyecciones.add(proyeccion);
 				}
@@ -130,132 +134,126 @@ public class AutomataService {
 		return response;
 	}
 
-	public Automata getAFD(Automata e_afnd){
+	//	public Automata getAFD(Automata e_afnd){
+	//
+	//		String estadoInicial = "1";
+	//
+	//		if (poseeTransicionEpsilon(estadoInicial, e_afnd)) {
+	//
+	//		}
+	//
+	//		return new Automata();
+	//	}
 
-		String estadoInicial = "1";
-
-		if (poseeTransicionEpsilon(estadoInicial, e_afnd)) {
-
-		}
-
-		return new Automata();
-	}
-
-	private Automata getAFD(List<List<String>> listaDeEstados, List<Proyeccion> proyecciones, List<String> simbolosInput, int cantEstados) {
+	public Automata getAFD(List<Proyeccion> proyeccionesOriginales, List<String> simbolosInput, int cantEstados) {
 
 		/*** Nuevo ***/
 		List<Proyeccion> nuevasProyecciones = new ArrayList<Proyeccion>();
-		List<String> nuevosEstados = new ArrayList<String>();
-		int nuevaCantEstados = 0;
+		List<List<String>> nuevosEstados = new ArrayList<List<String>>();
+		List<List<String>> ultimosNuevosEstados = new ArrayList<List<String>>();
+		int nuevaCantEstados = 1;
 
-		List<String> estadoInicialListado = new ArrayList<String>();
-		estadoInicialListado.add(ESTADO_INICIAL);
+		List<String> estadosALosQueLlego = new ArrayList<String>();
+		estadosALosQueLlego.add(ESTADO_INICIAL);
+
+		List<String> ultimosEstadosAgregados = new ArrayList<String>();
+		ultimosEstadosAgregados.add(ESTADO_INICIAL);
+		
+		
 
 		/**
 		 * Estados a los que llego desde el estado inicial 
 		 **/
-		List<String> nuevoEstadoInicialListado = getEstadosALosQueLlegoConEpsilon(estadoInicialListado, proyecciones, cantEstados);
+		List<String> nuevoEstadoInicialListado = getEstadosALosQueLlegoConEpsilon(estadosALosQueLlego, ultimosEstadosAgregados, proyeccionesOriginales, cantEstados);
 		Collections.sort(nuevoEstadoInicialListado);
-		String nuevoEstadoInicial = getEstadoFromListado(nuevoEstadoInicialListado);
-		nuevosEstados.add(nuevoEstadoInicial);
+		//		String nuevoEstadoInicial = getEstadoFromListado(nuevoEstadoInicialListado);
+		ultimosNuevosEstados.add(nuevoEstadoInicialListado);
+		nuevosEstados.add(nuevoEstadoInicialListado);
 
-		//TODO meter en metodo aparte
 		/**
 		 * Estados a los que llego con el nuevo estado inicial - Creacion de nuevas proyecciones
-		 **/		
-		for (String input : simbolosInput) {
-			List<String> estadoNuevoListado = new ArrayList<String>();
+		 **/
+		Automata response = getAutomata(nuevosEstados, ultimosNuevosEstados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, cantEstados, nuevaCantEstados);
 
-			for (String estado : nuevoEstadoInicialListado) {
-
-				List<String> estadoALosQueLlegoConEstadoInicial = getEstadosALosQueLlego(estado, input, proyecciones, cantEstados);
-
-				for (String estadoNuevo : estadoALosQueLlegoConEstadoInicial) {
-					if (estadoNuevoListado.contains(estadoNuevo) == false) {
-						estadoNuevoListado.add(estadoNuevo);
-					}
-				}
-			}
-
-			Collections.sort(estadoNuevoListado); 
-
-			String nuevoEstado = getEstadoFromListado(estadoNuevoListado);
-
-			if (estadoYaExiste(nuevoEstado, nuevosEstados) == false) {
-				nuevosEstados.add(nuevoEstado);
-				nuevaCantEstados++;
-			}
-
-			Proyeccion proyeccion = new Proyeccion();
-			proyeccion.setEstadoSalida(nuevoEstadoInicial);
-			proyeccion.setSimboloInput(input);
-			proyeccion.setEstadoLlegada(nuevoEstado);
-
-			if (proyeccionYaExiste(proyeccion, nuevasProyecciones) == false) {
-				nuevasProyecciones.add(proyeccion);
-			}
-		}
-
-		return null;
+		return response;
 	}
 
 	//Recursivo
 	private Automata getAutomata(List<List<String>> nuevosEstados, List<List<String>> ultimosNuevosEstados, 
 			List<Proyeccion> proyeccionesOriginales, List<Proyeccion> nuevasProyecciones, List<String> simbolosInput, int cantEstados, int nuevaCantEstados){
-		
+
 		List<List<String>> nuevosEstadosTotales = new ArrayList<List<String>>(nuevosEstados);
 		List<List<String>> nuevosEstadosAgregados = new ArrayList<List<String>>();
-//		List<Proyeccion> nuevasProyeccionesAgregadas = new ArrayList<Proyeccion>(nuevasProyecciones);
+		//		List<Proyeccion> nuevasProyeccionesAgregadas = new ArrayList<Proyeccion>(nuevasProyecciones);
 
 		for (String input : simbolosInput) {
 
 			for (List<String> estadoListado : ultimosNuevosEstados) {
-				
+
 				List<String> nuevoEstadoListado = new ArrayList<String>();
 
 				for (String estado : estadoListado) {
 
 					List<String> estadoALosQueLlego = getEstadosALosQueLlego(estado, input, proyeccionesOriginales, cantEstados);
 
-					for (String estadoNuevo : estadoALosQueLlego) {
-						if (nuevoEstadoListado.contains(estadoNuevo) == false) {
-							nuevoEstadoListado.add(estadoNuevo);
+					if (estadoALosQueLlego != null) {
+						for (String estadoNuevo : estadoALosQueLlego) {
+							if (nuevoEstadoListado.contains(estadoNuevo) == false) {
+								nuevoEstadoListado.add(estadoNuevo);
+							}
 						}
 					}
 				}
-				
+
 				Collections.sort(nuevoEstadoListado); 
 				//String nuevoEstado = getEstadoFromListado(nuevoEstadoListado);
-				
-				if (estadoYaExiste(nuevoEstadoListado, nuevosEstadosTotales) == false && estadoYaExiste(nuevoEstadoListado, nuevosEstadosAgregados) == false) {
+
+				if (nuevoEstadoListado != null && nuevoEstadoListado.size() > 0 && estadoYaExiste(nuevoEstadoListado, nuevosEstadosTotales) == false 
+						&& estadoYaExiste(nuevoEstadoListado, nuevosEstadosAgregados) == false) {
+
 					nuevosEstadosTotales.add(nuevoEstadoListado);
 					nuevosEstadosAgregados.add(nuevoEstadoListado);
 					nuevaCantEstados++;
 					
-					Proyeccion proyeccion = new Proyeccion();
+
+					//					Proyeccion proyeccion = new Proyeccion();
+					//					proyeccion.setEstadoSalida(getEstadoFromListado(estadoListado));
+					//					proyeccion.setSimboloInput(input);
+					//					proyeccion.setEstadoLlegada(getEstadoFromListado(nuevoEstadoListado));
+
+					//					if (proyeccionYaExiste(proyeccion, nuevasProyecciones) == false) {
+					//						nuevasProyecciones.add(proyeccion);
+					//					}
+				}
+
+				Proyeccion proyeccion = new Proyeccion();
+
+				if (estadoListado != null && estadoListado.size() > 0 && input != null && input.isEmpty() == false && nuevoEstadoListado != null && nuevoEstadoListado.size() > 0) {
+
 					proyeccion.setEstadoSalida(getEstadoFromListado(estadoListado));
 					proyeccion.setSimboloInput(input);
 					proyeccion.setEstadoLlegada(getEstadoFromListado(nuevoEstadoListado));
-
+					
 					if (proyeccionYaExiste(proyeccion, nuevasProyecciones) == false) {
-						nuevasProyecciones.add(proyeccion);
+						nuevasProyecciones.add(proyeccion);	
 					}
+					
 				}
 			}
 		}
-	
-//		if (nuevosEstadosTotales.equals(nuevosEstados) == false) {
-//			Au
-//		}
-		
+
+		//		if (nuevosEstadosTotales.equals(nuevosEstados) == false) {
+		//			Au
+		//		}
+
 		if (nuevosEstadosTotales.equals(nuevosEstados)) {
 			Automata automata = new Automata();
 			automata.setCantEstados(nuevaCantEstados);
-//			automata.setEstadosFinales(estadosFinales); //TODO
+			//			automata.setEstadosFinales(estadosFinales); //TODO
 			automata.setProyecciones(nuevasProyecciones);
 			automata.setCantEstados(nuevaCantEstados);
 			automata.setSimbolosInput(getSimbolosInputSinEpsilon(simbolosInput));
-			
+
 			return automata;
 		}
 		else {
@@ -265,15 +263,26 @@ public class AutomataService {
 
 	private List<String> getEstadosALosQueLlego(String estadoSalida, String input, List<Proyeccion> proyecciones, int cantEstados){
 
-		List<String> estados = new ArrayList<String>();
+		List<String> estadosALosQueLlego = new ArrayList<String>();
+		List<String> ultimosEstadosAgregados = new ArrayList<String>();
+		List<String> response = null;
+		List<String> response2 = null;
 
 		for (Proyeccion proyeccion : proyecciones) {
 			if (estadoSalida.equals(proyeccion.getEstadoSalida()) && input.equals(proyeccion.getSimboloInput())) {
-				estados.add(proyeccion.getEstadoLlegada());
+				ultimosEstadosAgregados.add(proyeccion.getEstadoLlegada());
 			}
 		}
 
-		List<String> response = getEstadosALosQueLlegoConEpsilon(estados, proyecciones, cantEstados);
+		if (ultimosEstadosAgregados != null && ultimosEstadosAgregados.size() > 0) {
+			response = getEstadosALosQueLlegoConEpsilon(estadosALosQueLlego, ultimosEstadosAgregados, proyecciones, cantEstados);
+
+			for(String estado : ultimosEstadosAgregados) {
+				if (response.contains(estado) == false) {
+					response.add(estado);
+				}
+			}
+		}
 
 		return response;
 	}
@@ -281,36 +290,41 @@ public class AutomataService {
 	/**
 	 * En el primer llamado, estadosLlegada contiene el estado de salida
 	 **/
-	private List<String> getEstadosALosQueLlegoConEpsilon(List<String> estadosLlegada, List<Proyeccion> proyecciones, int cantEstados){
+	private List<String> getEstadosALosQueLlegoConEpsilon(List<String> estadosALosQueLlego, List<String> ultimosEstadosAgregados, List<Proyeccion> proyecciones, int cantEstados){
 
-		List<String> nuevosEstadosLlegada = new ArrayList<String>(estadosLlegada);
+		List<String> nuevosEstadosALosQueLlego = new ArrayList<String>(estadosALosQueLlego);
+		List<String> nuevosEstadosAgregados = new ArrayList<String>();
+		//		nuevosEstadosALosQueLlego.add("5");
+		//		cantEstados = 7;
 
-		for(String estadoLlegada : estadosLlegada) {
+		for(String estado : ultimosEstadosAgregados) {
 			for (Proyeccion proyeccion : proyecciones) {
-				if (estadoLlegada.equals(proyeccion.getEstadoSalida()) && proyeccion.getSimboloInput().equals(EPSILON) && estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosLlegada) == false) {
-					nuevosEstadosLlegada.add(proyeccion.getEstadoLlegada());
+				if (estado.equals(proyeccion.getEstadoSalida()) && proyeccion.getSimboloInput().equals(EPSILON) && estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosALosQueLlego) == false
+						&& estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosAgregados) == false) {
+					nuevosEstadosALosQueLlego.add(proyeccion.getEstadoLlegada());
+					nuevosEstadosAgregados.add(proyeccion.getEstadoLlegada());
 				}
 			}
 		}
 
-		if (nuevosEstadosLlegada != estadosLlegada && nuevosEstadosLlegada.size() != cantEstados) {
-			return getEstadosALosQueLlegoConEpsilon(nuevosEstadosLlegada, proyecciones, cantEstados);
+		if (nuevosEstadosALosQueLlego.equals(estadosALosQueLlego) == false && nuevosEstadosALosQueLlego.size() != cantEstados) {
+			return getEstadosALosQueLlegoConEpsilon(nuevosEstadosALosQueLlego, nuevosEstadosAgregados, proyecciones, cantEstados);
 		}
 		else {
-			return nuevosEstadosLlegada;
+			return nuevosEstadosALosQueLlego;
 		}
 	}
-	
+
 	private boolean estadoYaExiste(String estadoAChequear, List<String> estados) {
-		
+
 		boolean response = false;
-		
+
 		for (String estado : estados) {
 			if (estado.equals(estadoAChequear)){
 				response = true;
 			}
 		}
-		
+
 		return response;
 	}
 
@@ -334,23 +348,24 @@ public class AutomataService {
 		//TODO chequear el tema del equals
 		for (Proyeccion proyeccion : proyecciones) {
 			if (proyeccion.equals(proyeccionAChequear)){
-				response = true;
+				return true;
+				
 			}
 		}
 
 		return response;
 	}
-	
+
 	private List<String> getSimbolosInputSinEpsilon(List<String> simbolosInput){
-		
+
 		List<String> response = new ArrayList<String>();				
-		
+
 		for (String simbolo : simbolosInput) {
 			if (simbolo.equals(EPSILON) == false) {
 				response.add(simbolo);
 			}
 		}
-		
+
 		return response;
 	}
 
