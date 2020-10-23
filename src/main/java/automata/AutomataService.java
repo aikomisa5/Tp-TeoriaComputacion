@@ -19,6 +19,7 @@ public class AutomataService {
 	private static final String formatoProyeccion = "NumeroEstadoSalida, SimboloInput -> NumeroEstadoLlegada. Ej: 4, E -> 4";
 	private static final String EPSILON = "E";
 	private static final String ESTADO_INICIAL = "1";
+	private static final String ESTADO_TRAMPA = "T";
 
 	/**
 	 * Metodos publicos
@@ -55,6 +56,14 @@ public class AutomataService {
 		 * Estados a los que llego con el nuevo estado inicial - Creacion de nuevas proyecciones
 		 **/
 		Automata response = getAutomata(nuevosEstados, ultimosNuevosEstados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, estadosFinales, cantEstados, nuevaCantEstados);
+		
+		List<String> estados = new ArrayList<String>();
+		
+		for (List<String> estadoListado : response.getEstadosListado()) {
+			estados.add(getEstadoFromListado(estadoListado));
+		}
+		
+		response.setProyecciones(completarProyeccionesAEstadoTrampa(response.getProyecciones(), estados, response.getSimbolosInput()));
 
 		return response;
 	}
@@ -62,6 +71,47 @@ public class AutomataService {
 	/**
 	 * Metodos privados 
 	 **/
+	
+	private List<Proyeccion> completarProyeccionesAEstadoTrampa(List<Proyeccion> proyecciones, List<String> estados, List<String> simbolosInput) {
+		
+		List<Proyeccion> response = new ArrayList<Proyeccion>(proyecciones);
+		boolean existeEstadoTrampa = false;
+		
+		for (String simbolo : simbolosInput) {
+			for (String estado : estados) {
+				
+				boolean existeProyeccion = false;
+				
+				for (Proyeccion proyeccion : proyecciones) {
+					if (proyeccion.getEstadoSalida().equals(estado) && proyeccion.getSimboloInput().equals(simbolo)) {
+						existeProyeccion = true;
+					}
+				}
+				
+				if (existeProyeccion == false) {
+					existeEstadoTrampa = true;
+					Proyeccion proyeccion = new Proyeccion();
+					proyeccion.setEstadoSalida(estado);
+					proyeccion.setSimboloInput(simbolo);
+					proyeccion.setEstadoLlegada(ESTADO_TRAMPA);
+					response.add(proyeccion);
+				}
+			}
+		}
+		
+		if (existeEstadoTrampa == true) {
+			for (String simbolo : simbolosInput) {
+				
+				Proyeccion proyeccion = new Proyeccion();
+				proyeccion.setEstadoSalida(ESTADO_TRAMPA);
+				proyeccion.setSimboloInput(simbolo);
+				proyeccion.setEstadoLlegada(ESTADO_TRAMPA);
+				response.add(proyeccion);
+			}
+		}
+		
+		return response;
+	}
 
 	private Automata readAutomataFromTxtFile() throws BadFileException, FileNotFoundException {
 		Automata response = new Automata();
@@ -81,6 +131,8 @@ public class AutomataService {
 
 			List<Proyeccion> proyecciones = new ArrayList<Proyeccion>();
 
+			System.out.println("e-AFND");
+			
 			while (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
 
@@ -236,6 +288,7 @@ public class AutomataService {
 			automata.setProyecciones(nuevasProyecciones);
 			automata.setCantEstados(nuevaCantEstados);
 			automata.setSimbolosInput(getSimbolosInputSinEpsilon(simbolosInput));
+			automata.setEstadosListado(nuevosEstados);
 
 			return automata;
 		}
