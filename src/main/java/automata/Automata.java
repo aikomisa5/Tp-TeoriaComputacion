@@ -11,6 +11,7 @@ public class Automata {
 	private List<Proyeccion> proyecciones;
 	private List<String> estados;
 	private List<List<String>> estadosListado;
+	private String estadoInicial;
 	
 	public Automata() {
 		super();
@@ -31,7 +32,8 @@ public class Automata {
 	}
 	
 	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
-			List<Proyeccion> proyecciones, List<String> estados, List<List<String>> estadosListado) {
+			List<Proyeccion> proyecciones, List<String> estados, List<List<String>> estadosListado,
+			String estadoInicial) {
 		super();
 		this.simbolosInput = simbolosInput;
 		this.cantEstados = cantEstados;
@@ -39,6 +41,7 @@ public class Automata {
 		this.proyecciones = proyecciones;
 		this.estados = estados;
 		this.estadosListado = estadosListado;
+		this.estadoInicial = estadoInicial;
 	}
 
 	public List<String> getSimbolosInput() {
@@ -87,5 +90,13 @@ public class Automata {
 
 	public void setEstadosListado(List<List<String>> estadosListado) {
 		this.estadosListado = estadosListado;
+	}
+
+	public String getEstadoInicial() {
+		return estadoInicial;
+	}
+
+	public void setEstadoInicial(String estadoInicial) {
+		this.estadoInicial = estadoInicial;
 	}
 }

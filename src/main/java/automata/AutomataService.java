@@ -24,12 +24,12 @@ public class AutomataService {
 	/**
 	 * Metodos publicos
 	 **/
-	
+
 	public Automata getAutomataFromTxtFile() throws BadFileException, FileNotFoundException {
 
 		return readAutomataFromTxtFile();
 	}
-	
+
 	public Automata getAFD(List<Proyeccion> proyeccionesOriginales, List<String> simbolosInput, List<String> estadosFinales, int cantEstados) {
 
 		/*** Nuevo ***/
@@ -56,38 +56,50 @@ public class AutomataService {
 		 * Estados a los que llego con el nuevo estado inicial - Creacion de nuevas proyecciones
 		 **/
 		Automata response = getAutomata(nuevosEstados, ultimosNuevosEstados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, estadosFinales, cantEstados, nuevaCantEstados);
-		
+
 		List<String> estados = new ArrayList<String>();
-		
+
 		for (List<String> estadoListado : response.getEstadosListado()) {
 			estados.add(getEstadoFromListado(estadoListado));
 		}
-		
+
+		response.setEstadoInicial(getEstadoFromListado(nuevoEstadoInicialListado));
 		response.setProyecciones(completarProyeccionesAEstadoTrampa(response.getProyecciones(), estados, response.getSimbolosInput()));
 
 		return response;
 	}
-	
+
+	public boolean procesar(String w) throws FileNotFoundException, BadFileException {
+
+		boolean response = false;
+
+		Automata e_afnd = getAutomataFromTxtFile();
+		Automata afd = getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+		response = cadenaPerteneceAAFD(w, afd);
+
+		return response;
+	}
+
 	/**
 	 * Metodos privados 
 	 **/
-	
+
 	private List<Proyeccion> completarProyeccionesAEstadoTrampa(List<Proyeccion> proyecciones, List<String> estados, List<String> simbolosInput) {
-		
+
 		List<Proyeccion> response = new ArrayList<Proyeccion>(proyecciones);
 		boolean existeEstadoTrampa = false;
-		
+
 		for (String simbolo : simbolosInput) {
 			for (String estado : estados) {
-				
+
 				boolean existeProyeccion = false;
-				
+
 				for (Proyeccion proyeccion : proyecciones) {
 					if (proyeccion.getEstadoSalida().equals(estado) && proyeccion.getSimboloInput().equals(simbolo)) {
 						existeProyeccion = true;
 					}
 				}
-				
+
 				if (existeProyeccion == false) {
 					existeEstadoTrampa = true;
 					Proyeccion proyeccion = new Proyeccion();
@@ -98,10 +110,10 @@ public class AutomataService {
 				}
 			}
 		}
-		
+
 		if (existeEstadoTrampa == true) {
 			for (String simbolo : simbolosInput) {
-				
+
 				Proyeccion proyeccion = new Proyeccion();
 				proyeccion.setEstadoSalida(ESTADO_TRAMPA);
 				proyeccion.setSimboloInput(simbolo);
@@ -109,7 +121,7 @@ public class AutomataService {
 				response.add(proyeccion);
 			}
 		}
-		
+
 		return response;
 	}
 
@@ -131,8 +143,6 @@ public class AutomataService {
 
 			List<Proyeccion> proyecciones = new ArrayList<Proyeccion>();
 
-			System.out.println("e-AFND");
-			
 			while (myReader.hasNextLine()) {
 				String data = myReader.nextLine();
 
@@ -200,8 +210,6 @@ public class AutomataService {
 
 					proyecciones.add(proyeccion);
 				}
-
-				System.out.println(data);
 
 				indice++;
 			}
@@ -434,5 +442,95 @@ public class AutomataService {
 		return nuevoEstadoInicialListado.stream()
 				.map(n -> n)
 				.collect(Collectors.joining("", "{", "}"));
+	}
+	
+	private boolean cadenaPerteneceAAFD(String cadena, Automata afd) {
+
+		boolean response = false;
+
+		List<String> estadoListado = new ArrayList<>();
+
+		for (char ch : cadena.toCharArray()) { 
+			estadoListado.add(String.valueOf(ch));
+		}
+
+		int largoCadena = estadoListado.size();
+		int contador = 0;
+
+		String ultimoEstado = afd.getEstadoInicial();
+
+		if (estadoListado.size() == 0 && afd.getEstadosFinales().contains(ultimoEstado)) {
+			return true;
+		}
+
+		for (String input : estadoListado) {
+
+			boolean match = false;
+
+			for (Proyeccion proyeccion : afd.getProyecciones()) {
+				if (proyeccion.getEstadoSalida().equals(ultimoEstado) && proyeccion.getSimboloInput().equals(input) && proyeccion.getEstadoLlegada().equals(ESTADO_TRAMPA) == false) {
+					match = true;
+					ultimoEstado = proyeccion.getEstadoLlegada();
+					contador++;
+					break;
+				}
+			}
+
+			if (match == false) {
+				return false;
+			}
+			if (match == true && afd.getEstadosFinales().contains(ultimoEstado) && largoCadena == contador) {
+				return true;
+			}
+		}
+
+		return response;
+	}
+	
+	public void printAutomata(Automata automata, String tipoAutomata) {
+		System.out.println("-----------------------");
+		System.out.println(tipoAutomata);
+		System.out.println("-----------------------");
+		
+		String simbolosInput = "";
+		
+		int indice = 1;
+		
+		for (String simbolo : automata.getSimbolosInput()) {
+			
+			if (indice == automata.getSimbolosInput().size()) {
+				simbolosInput = simbolosInput + simbolo;
+			}
+			else {
+				simbolosInput = simbolosInput + simbolo + ", ";
+			}
+			
+			indice++;
+		}
+		
+		String estadosFinales = "";
+		
+		int indiceEstadosFinales = 1;
+		
+		for (String estado : automata.getEstadosFinales()) {
+			
+			if (indiceEstadosFinales == automata.getEstadosFinales().size()) {
+				estadosFinales = estadosFinales + estado;
+			}
+			else {
+				estadosFinales = estadosFinales + estado + ", ";
+			}
+			
+			indiceEstadosFinales++;
+		}
+		
+		
+		System.out.println(simbolosInput);
+		System.out.println(automata.getCantEstados());
+		System.out.println(estadosFinales);
+		
+		automata.getProyecciones().forEach(a ->{
+			System.out.println(a.getEstadoSalida() + ", " + a.getSimboloInput() + " -> " + a.getEstadoLlegada());
+		});
 	}
 }

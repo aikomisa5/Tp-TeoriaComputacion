@@ -8,53 +8,41 @@ public class Main {
 	
 	public static void main(String[] args) throws FileNotFoundException, BadFileException {
 		
-		//TODO quitar de aca
+		//TODO llevar esto a un test
 		AutomataService automataService = new AutomataService();
-		Automata automata = automataService.getAutomataFromTxtFile();
-		Automata response = automataService.getAFD(automata.getProyecciones(), automata.getSimbolosInput(), automata.getEstadosFinales(), automata.getCantEstados());
 		
-		System.out.println("-----------------------");
-		System.out.println("AFD");
+		Automata e_afnd = automataService.getAutomataFromTxtFile();
+		Automata afd = automataService.getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 		
-		String simbolosInput = "";
+		automataService.printAutomata(e_afnd, "E-AFND");
+		automataService.printAutomata(afd, "AFD");
 		
-		int indice = 1;
+		System.out.println("--------------------");
+		System.out.println("Procesado de Strings");
+		System.out.println("--------------------");
 		
-		for (String simbolo : response.getSimbolosInput()) {
-			
-			if (indice == response.getSimbolosInput().size()) {
-				simbolosInput = simbolosInput + simbolo;
-			}
-			else {
-				simbolosInput = simbolosInput + simbolo + ", ";
-			}
-			
-			indice++;
-		}
+		boolean aaaaaaaaaa = automataService.procesar("aaaaaaaaaa");
+		System.out.println("aaaaaaaaaa pertenece? : " + aaaaaaaaaa);
 		
-		String estadosFinales = "";
+		boolean cccccccc = automataService.procesar("cccccccc");
+		System.out.println("cccccccc pertenece? : " + cccccccc);
 		
-		int indiceEstadosFinales = 1;
+		boolean aba = automataService.procesar("aba");
+		System.out.println("aba pertenece? : " + aba);
 		
-		for (String estado : response.getEstadosFinales()) {
-			
-			if (indiceEstadosFinales == response.getEstadosFinales().size()) {
-				estadosFinales = estadosFinales + estado;
-			}
-			else {
-				estadosFinales = estadosFinales + estado + ", ";
-			}
-			
-			indiceEstadosFinales++;
-		}
+		boolean ababa = automataService.procesar("ababa");
+		System.out.println("ababa pertenece? : " + ababa);
 		
+		boolean abcabc = automataService.procesar("abcabc");
+		System.out.println("abcabc pertenece? : " + abcabc);
 		
-		System.out.println(simbolosInput);
-		System.out.println(response.getCantEstados());
-		System.out.println(estadosFinales);
+		boolean bb = automataService.procesar("bb");
+		System.out.println("bb pertenece? : " + bb);
 		
-		response.getProyecciones().forEach(a ->{
-			System.out.println(a.getEstadoSalida() + ", " + a.getSimboloInput() + " -> " + a.getEstadoLlegada());
-		});
+		boolean bbb = automataService.procesar("bbb");
+		System.out.println("bbb pertenece? : " + bbb);
+		
+		boolean ab = automataService.procesar("ab");
+		System.out.println("ab pertenece? : " + ab);
 	} 
 }
