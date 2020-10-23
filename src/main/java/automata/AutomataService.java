@@ -20,8 +20,50 @@ public class AutomataService {
 	private static final String EPSILON = "E";
 	private static final String ESTADO_INICIAL = "1";
 
-	public Automata getAutomataFromFile() throws BadFileException, FileNotFoundException {
+	/**
+	 * Metodos publicos
+	 **/
+	
+	public Automata getAutomataFromTxtFile() throws BadFileException, FileNotFoundException {
 
+		return readAutomataFromTxtFile();
+	}
+	
+	public Automata getAFD(List<Proyeccion> proyeccionesOriginales, List<String> simbolosInput, List<String> estadosFinales, int cantEstados) {
+
+		/*** Nuevo ***/
+		List<Proyeccion> nuevasProyecciones = new ArrayList<Proyeccion>();
+		List<List<String>> nuevosEstados = new ArrayList<List<String>>();
+		List<List<String>> ultimosNuevosEstados = new ArrayList<List<String>>();
+		int nuevaCantEstados = 1;
+
+		List<String> estadosALosQueLlego = new ArrayList<String>();
+		estadosALosQueLlego.add(ESTADO_INICIAL);
+
+		List<String> ultimosEstadosAgregados = new ArrayList<String>();
+		ultimosEstadosAgregados.add(ESTADO_INICIAL);
+
+		/**
+		 * Estados a los que llego desde el estado inicial 
+		 **/
+		List<String> nuevoEstadoInicialListado = getEstadosALosQueLlegoConEpsilon(estadosALosQueLlego, ultimosEstadosAgregados, proyeccionesOriginales, cantEstados);
+		Collections.sort(nuevoEstadoInicialListado);
+		ultimosNuevosEstados.add(nuevoEstadoInicialListado);
+		nuevosEstados.add(nuevoEstadoInicialListado);
+
+		/**
+		 * Estados a los que llego con el nuevo estado inicial - Creacion de nuevas proyecciones
+		 **/
+		Automata response = getAutomata(nuevosEstados, ultimosNuevosEstados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, estadosFinales, cantEstados, nuevaCantEstados);
+
+		return response;
+	}
+	
+	/**
+	 * Metodos privados 
+	 **/
+
+	private Automata readAutomataFromTxtFile() throws BadFileException, FileNotFoundException {
 		Automata response = new Automata();
 
 		Scanner myReader = null;
@@ -134,57 +176,14 @@ public class AutomataService {
 		return response;
 	}
 
-	//	public Automata getAFD(Automata e_afnd){
-	//
-	//		String estadoInicial = "1";
-	//
-	//		if (poseeTransicionEpsilon(estadoInicial, e_afnd)) {
-	//
-	//		}
-	//
-	//		return new Automata();
-	//	}
-
-	public Automata getAFD(List<Proyeccion> proyeccionesOriginales, List<String> simbolosInput, int cantEstados) {
-
-		/*** Nuevo ***/
-		List<Proyeccion> nuevasProyecciones = new ArrayList<Proyeccion>();
-		List<List<String>> nuevosEstados = new ArrayList<List<String>>();
-		List<List<String>> ultimosNuevosEstados = new ArrayList<List<String>>();
-		int nuevaCantEstados = 1;
-
-		List<String> estadosALosQueLlego = new ArrayList<String>();
-		estadosALosQueLlego.add(ESTADO_INICIAL);
-
-		List<String> ultimosEstadosAgregados = new ArrayList<String>();
-		ultimosEstadosAgregados.add(ESTADO_INICIAL);
-		
-		
-
-		/**
-		 * Estados a los que llego desde el estado inicial 
-		 **/
-		List<String> nuevoEstadoInicialListado = getEstadosALosQueLlegoConEpsilon(estadosALosQueLlego, ultimosEstadosAgregados, proyeccionesOriginales, cantEstados);
-		Collections.sort(nuevoEstadoInicialListado);
-		//		String nuevoEstadoInicial = getEstadoFromListado(nuevoEstadoInicialListado);
-		ultimosNuevosEstados.add(nuevoEstadoInicialListado);
-		nuevosEstados.add(nuevoEstadoInicialListado);
-
-		/**
-		 * Estados a los que llego con el nuevo estado inicial - Creacion de nuevas proyecciones
-		 **/
-		Automata response = getAutomata(nuevosEstados, ultimosNuevosEstados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, cantEstados, nuevaCantEstados);
-
-		return response;
-	}
-
-	//Recursivo
+	/**
+	 * Metodo Recursivo I
+	 **/
 	private Automata getAutomata(List<List<String>> nuevosEstados, List<List<String>> ultimosNuevosEstados, 
-			List<Proyeccion> proyeccionesOriginales, List<Proyeccion> nuevasProyecciones, List<String> simbolosInput, int cantEstados, int nuevaCantEstados){
+			List<Proyeccion> proyeccionesOriginales, List<Proyeccion> nuevasProyecciones, List<String> simbolosInput, List<String> estadosFinalesOriginales, int cantEstados, int nuevaCantEstados){
 
 		List<List<String>> nuevosEstadosTotales = new ArrayList<List<String>>(nuevosEstados);
 		List<List<String>> nuevosEstadosAgregados = new ArrayList<List<String>>();
-		//		List<Proyeccion> nuevasProyeccionesAgregadas = new ArrayList<Proyeccion>(nuevasProyecciones);
 
 		for (String input : simbolosInput) {
 
@@ -206,7 +205,6 @@ public class AutomataService {
 				}
 
 				Collections.sort(nuevoEstadoListado); 
-				//String nuevoEstado = getEstadoFromListado(nuevoEstadoListado);
 
 				if (nuevoEstadoListado != null && nuevoEstadoListado.size() > 0 && estadoYaExiste(nuevoEstadoListado, nuevosEstadosTotales) == false 
 						&& estadoYaExiste(nuevoEstadoListado, nuevosEstadosAgregados) == false) {
@@ -214,16 +212,6 @@ public class AutomataService {
 					nuevosEstadosTotales.add(nuevoEstadoListado);
 					nuevosEstadosAgregados.add(nuevoEstadoListado);
 					nuevaCantEstados++;
-					
-
-					//					Proyeccion proyeccion = new Proyeccion();
-					//					proyeccion.setEstadoSalida(getEstadoFromListado(estadoListado));
-					//					proyeccion.setSimboloInput(input);
-					//					proyeccion.setEstadoLlegada(getEstadoFromListado(nuevoEstadoListado));
-
-					//					if (proyeccionYaExiste(proyeccion, nuevasProyecciones) == false) {
-					//						nuevasProyecciones.add(proyeccion);
-					//					}
 				}
 
 				Proyeccion proyeccion = new Proyeccion();
@@ -233,23 +221,18 @@ public class AutomataService {
 					proyeccion.setEstadoSalida(getEstadoFromListado(estadoListado));
 					proyeccion.setSimboloInput(input);
 					proyeccion.setEstadoLlegada(getEstadoFromListado(nuevoEstadoListado));
-					
+
 					if (proyeccionYaExiste(proyeccion, nuevasProyecciones) == false) {
 						nuevasProyecciones.add(proyeccion);	
 					}
-					
+
 				}
 			}
 		}
 
-		//		if (nuevosEstadosTotales.equals(nuevosEstados) == false) {
-		//			Au
-		//		}
-
 		if (nuevosEstadosTotales.equals(nuevosEstados)) {
 			Automata automata = new Automata();
-			automata.setCantEstados(nuevaCantEstados);
-			//			automata.setEstadosFinales(estadosFinales); //TODO
+			automata.setEstadosFinales(getEstadosFinales(nuevosEstadosTotales, estadosFinalesOriginales));
 			automata.setProyecciones(nuevasProyecciones);
 			automata.setCantEstados(nuevaCantEstados);
 			automata.setSimbolosInput(getSimbolosInputSinEpsilon(simbolosInput));
@@ -257,7 +240,33 @@ public class AutomataService {
 			return automata;
 		}
 		else {
-			return getAutomata(nuevosEstadosTotales, nuevosEstadosAgregados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, cantEstados, nuevaCantEstados);
+			return getAutomata(nuevosEstadosTotales, nuevosEstadosAgregados, proyeccionesOriginales, nuevasProyecciones, simbolosInput, estadosFinalesOriginales, cantEstados, nuevaCantEstados);
+		}
+	}
+
+	/**
+	 * Metodo Recursivo II
+	 **/
+	private List<String> getEstadosALosQueLlegoConEpsilon(List<String> estadosALosQueLlego, List<String> ultimosEstadosAgregados, List<Proyeccion> proyecciones, int cantEstados){
+
+		List<String> nuevosEstadosALosQueLlego = new ArrayList<String>(estadosALosQueLlego);
+		List<String> nuevosEstadosAgregados = new ArrayList<String>();
+
+		for(String estado : ultimosEstadosAgregados) {
+			for (Proyeccion proyeccion : proyecciones) {
+				if (estado.equals(proyeccion.getEstadoSalida()) && proyeccion.getSimboloInput().equals(EPSILON) && estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosALosQueLlego) == false
+						&& estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosAgregados) == false) {
+					nuevosEstadosALosQueLlego.add(proyeccion.getEstadoLlegada());
+					nuevosEstadosAgregados.add(proyeccion.getEstadoLlegada());
+				}
+			}
+		}
+
+		if (nuevosEstadosALosQueLlego.equals(estadosALosQueLlego) == false && nuevosEstadosALosQueLlego.size() != cantEstados) {
+			return getEstadosALosQueLlegoConEpsilon(nuevosEstadosALosQueLlego, nuevosEstadosAgregados, proyecciones, cantEstados);
+		}
+		else {
+			return nuevosEstadosALosQueLlego;
 		}
 	}
 
@@ -266,7 +275,6 @@ public class AutomataService {
 		List<String> estadosALosQueLlego = new ArrayList<String>();
 		List<String> ultimosEstadosAgregados = new ArrayList<String>();
 		List<String> response = null;
-		List<String> response2 = null;
 
 		for (Proyeccion proyeccion : proyecciones) {
 			if (estadoSalida.equals(proyeccion.getEstadoSalida()) && input.equals(proyeccion.getSimboloInput())) {
@@ -287,34 +295,32 @@ public class AutomataService {
 		return response;
 	}
 
-	/**
-	 * En el primer llamado, estadosLlegada contiene el estado de salida
-	 **/
-	private List<String> getEstadosALosQueLlegoConEpsilon(List<String> estadosALosQueLlego, List<String> ultimosEstadosAgregados, List<Proyeccion> proyecciones, int cantEstados){
+	private List<String> getEstadosFinales(List<List<String>> nuevosEstados, List<String> estadosFinalesOriginales){
 
-		List<String> nuevosEstadosALosQueLlego = new ArrayList<String>(estadosALosQueLlego);
-		List<String> nuevosEstadosAgregados = new ArrayList<String>();
-		//		nuevosEstadosALosQueLlego.add("5");
-		//		cantEstados = 7;
+		List<String> response = new ArrayList<String>();
 
-		for(String estado : ultimosEstadosAgregados) {
-			for (Proyeccion proyeccion : proyecciones) {
-				if (estado.equals(proyeccion.getEstadoSalida()) && proyeccion.getSimboloInput().equals(EPSILON) && estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosALosQueLlego) == false
-						&& estadoYaExiste(proyeccion.getEstadoLlegada(), nuevosEstadosAgregados) == false) {
-					nuevosEstadosALosQueLlego.add(proyeccion.getEstadoLlegada());
-					nuevosEstadosAgregados.add(proyeccion.getEstadoLlegada());
+		for(List<String> nuevoEstadoListado : nuevosEstados) {
+
+			boolean esEstadoFinal = false;
+
+			for(String estado : nuevoEstadoListado) {
+
+				if (estadosFinalesOriginales.contains(estado) == true){
+					esEstadoFinal = true;
 				}
+			}
+
+			if (esEstadoFinal == true) {
+				response.add(getEstadoFromListado(nuevoEstadoListado));
 			}
 		}
 
-		if (nuevosEstadosALosQueLlego.equals(estadosALosQueLlego) == false && nuevosEstadosALosQueLlego.size() != cantEstados) {
-			return getEstadosALosQueLlegoConEpsilon(nuevosEstadosALosQueLlego, nuevosEstadosAgregados, proyecciones, cantEstados);
-		}
-		else {
-			return nuevosEstadosALosQueLlego;
-		}
+		return response;
 	}
 
+	/**
+	 * Estado como String 
+	 **/
 	private boolean estadoYaExiste(String estadoAChequear, List<String> estados) {
 
 		boolean response = false;
@@ -328,6 +334,9 @@ public class AutomataService {
 		return response;
 	}
 
+	/**
+	 * Estado como List
+	 **/
 	private boolean estadoYaExiste(List<String> estadoAChequear, List<List<String>> estados) {
 
 		boolean response = false;
@@ -345,11 +354,10 @@ public class AutomataService {
 
 		boolean response = false;
 
-		//TODO chequear el tema del equals
 		for (Proyeccion proyeccion : proyecciones) {
 			if (proyeccion.equals(proyeccionAChequear)){
 				return true;
-				
+
 			}
 		}
 
@@ -373,18 +381,5 @@ public class AutomataService {
 		return nuevoEstadoInicialListado.stream()
 				.map(n -> n)
 				.collect(Collectors.joining("", "{", "}"));
-	}
-
-	private boolean poseeTransicionEpsilon(String estadoSalida, Automata automata) {
-
-		boolean response = false;
-
-		for (Proyeccion proyeccion : automata.getProyecciones()) {
-			if (proyeccion.getEstadoSalida().equals(estadoSalida) && proyeccion.getSimboloInput().equals(EPSILON)) {
-				response = true;
-			}
-		}		
-
-		return response;
 	}
 }
