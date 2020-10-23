@@ -441,7 +441,7 @@ public class AutomataService {
 	private String getEstadoFromListado(List<String> nuevoEstadoInicialListado) {
 		return nuevoEstadoInicialListado.stream()
 				.map(n -> n)
-				.collect(Collectors.joining("", "{", "}"));
+				.collect(Collectors.joining(""));
 	}
 	
 	private boolean cadenaPerteneceAAFD(String cadena, Automata afd) {
