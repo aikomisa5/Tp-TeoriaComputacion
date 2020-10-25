@@ -16,10 +16,12 @@ public class Automata {
 	public Automata() {
 		super();
 		simbolosInput = new ArrayList<String>();
+		cantEstados = 0;
 		estadosFinales = new ArrayList<String>();
 		proyecciones = new ArrayList<Proyeccion>();
 		estados = new ArrayList<String>();
 		estadosListado = new ArrayList<List<String>>();
+		estadoInicial = new String();
 	}
 	
 	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
@@ -29,6 +31,9 @@ public class Automata {
 		this.cantEstados = cantEstados;
 		this.estadosFinales = estadosFinales;
 		this.proyecciones = proyecciones;
+		this.estados = new ArrayList<String>();
+		this.estadosListado = new ArrayList<List<String>>();
+		this.estadoInicial = new String();
 	}
 	
 	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
@@ -99,4 +104,50 @@ public class Automata {
 	public void setEstadoInicial(String estadoInicial) {
 		this.estadoInicial = estadoInicial;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        
+        final Automata automata = (Automata) obj;
+        
+        if (this.simbolosInput.equals(automata.getSimbolosInput()) == false) {
+        	return false;
+        }
+        
+        if (this.cantEstados != automata.getCantEstados()) {
+        	return false;
+        }
+        
+        if (this.estadosFinales.equals(automata.getEstadosFinales()) == false) {
+        	return false;
+        }
+        
+        if (this.proyecciones.equals(automata.getProyecciones()) == false) {
+        	return false;
+        }
+        
+        if (this.estados.equals(automata.getEstados()) == false) {
+        	return false;
+        }
+        
+        if (this.estadosListado.equals(automata.getEstadosListado()) == false) {
+        	return false;
+        }
+        
+        if (this.estadoInicial.equals(automata.getEstadoInicial()) == false) {
+        	return false;
+        }
+		
+		return true;
+	}
+	
+	
 }
