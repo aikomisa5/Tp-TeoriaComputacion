@@ -2,6 +2,7 @@ package automata;
 
 public class Proyeccion {
 
+	//TODO cambiar nombre de la clase por Transicion. Luego cambiar en todo el proyecto las referencias a proyeccion por transicion y proyecciones por transiciones 
 	private String estadoSalida;
 	private String simboloInput;
 	private String estadoLlegada;

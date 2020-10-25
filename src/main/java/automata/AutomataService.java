@@ -65,10 +65,25 @@ public class AutomataService {
 
 		response.setEstadoInicial(getEstadoFromListado(nuevoEstadoInicialListado));
 		response.setProyecciones(completarProyeccionesAEstadoTrampa(response.getProyecciones(), estados, response.getSimbolosInput()));
+		
+		if (automataPoseeEstadoTrampa(response.getProyecciones()) == true) {
+			int cantEstadosActual =  response.getCantEstados();
+			response.setCantEstados(cantEstadosActual + 1);
+			
+			List<List<String>> estadosListadoActual = new ArrayList<List<String>>(response.getEstadosListado());
+			List<String> estadoTrampaListado = new ArrayList<String>();
+			estadoTrampaListado.add(ESTADO_TRAMPA);
+			estadosListadoActual.add(estadoTrampaListado);
+			response.setEstadosListado(estadosListadoActual);
+		}
 
 		return response;
 	}
 
+	//TODO No tiene sentido el metodo que definio el profe, porque si solo le puedo pasar la cadena a chequear, 
+	//eso significa que el automata siempre lo voy a sacar de un mismo lugar. En este caso del automata.txt
+	//Tampoco tiene sentido definir 2 variables locales de automatas en el service y que otro metodo cargue los automatas
+	//porque el service es para reutilizarlo..
 	public boolean procesar(String w) throws FileNotFoundException, BadFileException {
 
 		boolean response = false;
@@ -84,6 +99,20 @@ public class AutomataService {
 	 * Metodos privados 
 	 **/
 
+	private boolean automataPoseeEstadoTrampa(List<Proyeccion> proyecciones) {
+		
+		boolean response = false;
+		
+		for (Proyeccion proyeccion : proyecciones) {
+			if (proyeccion.getEstadoSalida().equals(ESTADO_TRAMPA) || proyeccion.getEstadoLlegada().equals(ESTADO_TRAMPA)) {
+				response = true;
+				break;
+			}
+		}
+		
+		return response;
+	}
+	
 	private List<Proyeccion> completarProyeccionesAEstadoTrampa(List<Proyeccion> proyecciones, List<String> estados, List<String> simbolosInput) {
 
 		List<Proyeccion> response = new ArrayList<Proyeccion>(proyecciones);
