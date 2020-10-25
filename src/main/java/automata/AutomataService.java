@@ -25,9 +25,9 @@ public class AutomataService {
 	 * Metodos publicos
 	 **/
 
-	public Automata getAutomataFromTxtFile() throws BadFileException, FileNotFoundException {
+	public Automata getAutomataFromTxtFile(String nombreAutomata) throws BadFileException, FileNotFoundException {
 
-		return readAutomataFromTxtFile();
+		return readAutomataFromTxtFile(nombreAutomata);
 	}
 
 	public Automata getAFD(List<Proyeccion> proyeccionesOriginales, List<String> simbolosInput, List<String> estadosFinales, int cantEstados) {
@@ -80,15 +80,12 @@ public class AutomataService {
 		return response;
 	}
 
-	//TODO No tiene sentido el metodo que definio el profe, porque si solo le puedo pasar la cadena a chequear, 
-	//eso significa que el automata siempre lo voy a sacar de un mismo lugar. En este caso del automata.txt
-	//Tampoco tiene sentido definir 2 variables locales de automatas en el service y que otro metodo cargue los automatas
-	//porque el service es para reutilizarlo..
-	public boolean procesar(String w) throws FileNotFoundException, BadFileException {
+
+	public boolean procesar(String w,String nombreAutomata) throws FileNotFoundException, BadFileException {
 
 		boolean response = false;
 
-		Automata e_afnd = getAutomataFromTxtFile();
+		Automata e_afnd = getAutomataFromTxtFile(nombreAutomata);
 		Automata afd = getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 		response = cadenaPerteneceAAFD(w, afd);
 
@@ -154,14 +151,14 @@ public class AutomataService {
 		return response;
 	}
 
-	private Automata readAutomataFromTxtFile() throws BadFileException, FileNotFoundException {
+	private Automata readAutomataFromTxtFile(String nombreAutomata) throws BadFileException, FileNotFoundException {
 		Automata response = new Automata();
 
 		Scanner myReader = null;
 		int indice = 0;
 
 		try {
-			File myObj = new File("src/main/resources/automata.txt");
+			File myObj = new File("src/main/resources/" + nombreAutomata);
 			myReader = new Scanner(myObj);
 
 			if (myReader.hasNextLine() == false) {

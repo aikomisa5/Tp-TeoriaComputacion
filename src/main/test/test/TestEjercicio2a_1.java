@@ -18,12 +18,14 @@ class TestEjercicio2a_1 {
 	private Automata e_afnd = new Automata();
 	private Automata afd = new Automata();
 
+	String nombreAutomata = "automata.txt";
+
 	@Test
 	public void testAutomata() throws FileNotFoundException, BadFileException {
 
 		boolean testExitoso = true;
 		
-		e_afnd = automataService.getAutomataFromTxtFile();
+		e_afnd = automataService.getAutomataFromTxtFile(nombreAutomata);
 		afd = automataService.getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 
 		automataService.printAutomata(e_afnd, "E-AFND");

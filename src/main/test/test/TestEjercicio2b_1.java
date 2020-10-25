@@ -17,15 +17,17 @@ import exceptions.BadFileException;
 class TestEjercicio2b_1 {
 	
 	AutomataService automataService = new AutomataService();
-	
-	private Automata e_afnd = new Automata();
-	private Automata afd = new Automata();
+
+	Automata e_afnd = new Automata();
+	Automata afd = new Automata();
+	String nombreAutomata = "automata.txt";
 
 	@BeforeAll
 	public void setup() throws FileNotFoundException, BadFileException {
 		//TODO la idea para mi seria usar esto.. el tema es que como esta definido el metodo procesar (por el profe) no se puede usarlo..
-		e_afnd = automataService.getAutomataFromTxtFile();
+		e_afnd = automataService.getAutomataFromTxtFile(nombreAutomata);
 		afd = automataService.getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+
 	}
 	
 	@Test
@@ -35,7 +37,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean aaaaaaaaaa = automataService.procesar("aaaaaaaaaa");
+		boolean aaaaaaaaaa = automataService.procesar("aaaaaaaaaa",nombreAutomata);
 		System.out.println("aaaaaaaaaa pertenece? : " + aaaaaaaaaa);
 
 		assertTrue(aaaaaaaaaa);
@@ -48,7 +50,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean cccccccc = automataService.procesar("cccccccc");
+		boolean cccccccc = automataService.procesar("cccccccc",nombreAutomata);
 		System.out.println("cccccccc pertenece? : " + cccccccc);
 		
 		assertTrue(cccccccc);
@@ -61,7 +63,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean aba = automataService.procesar("aba");
+		boolean aba = automataService.procesar("aba",nombreAutomata);
 		System.out.println("aba pertenece? : " + aba);
 		
 		assertTrue(aba);
@@ -74,7 +76,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean ababa = automataService.procesar("ababa");
+		boolean ababa = automataService.procesar("ababa",nombreAutomata);
 		System.out.println("ababa pertenece? : " + ababa);
 		
 		assertTrue(ababa);
@@ -87,7 +89,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean abcabc = automataService.procesar("abcabc");
+		boolean abcabc = automataService.procesar("abcabc",nombreAutomata);
 		System.out.println("abcabc pertenece? : " + abcabc);
 		
 		assertTrue(abcabc);
@@ -100,7 +102,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean bb = automataService.procesar("bb");
+		boolean bb = automataService.procesar("bb",nombreAutomata);
 		System.out.println("bb pertenece? : " + bb);
 		
 		assertTrue(bb);
@@ -113,7 +115,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean bbb = automataService.procesar("bbb");
+		boolean bbb = automataService.procesar("bbb",nombreAutomata);
 		System.out.println("bbb pertenece? : " + bbb);
 		
 		assertFalse(bbb);
@@ -126,7 +128,7 @@ class TestEjercicio2b_1 {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 
-		boolean ab = automataService.procesar("ab");
+		boolean ab = automataService.procesar("ab",nombreAutomata);
 		System.out.println("ab pertenece? : " + ab);
 		
 		assertTrue(ab);
