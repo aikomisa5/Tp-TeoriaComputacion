@@ -1,20 +1,18 @@
 package test;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import automata.Automata;
 import automata.AutomataService;
 import exceptions.BadFileException;
 
-@TestInstance(Lifecycle.PER_CLASS)
-class TestEjercicio2b_1 {
+public class TestEjercicio2b_1 {
 	
 	AutomataService automataService = new AutomataService();
 
@@ -22,7 +20,7 @@ class TestEjercicio2b_1 {
 	Automata afd = new Automata();
 	String nombreAutomata = "automata.txt";
 
-	@BeforeAll
+	@Before
 	public void setup() throws FileNotFoundException, BadFileException {
 		//TODO la idea para mi seria usar esto.. el tema es que como esta definido el metodo procesar (por el profe) no se puede usarlo..
 		e_afnd = automataService.getAutomataFromTxtFile(nombreAutomata);
