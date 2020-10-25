@@ -1,14 +1,16 @@
 package gramatica;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Gramatica {
 
     private List<Produccion> producciones;
     private String estadoInicial = "S";
+
+    private static final String terminalPatternString = "[a-z]";
 
     public Gramatica() {
         super();
@@ -165,7 +167,61 @@ public class Gramatica {
     }
 
     public void eliminarSimbolosNoGeneradores() {
-        //TODO:
+        Set<Character> simbolosTerminalesBase = new TreeSet<>();
+        Set<Character> simbolosUtiles = new TreeSet<>();
+
+        for(Produccion produccion : getProducciones()){
+            // identifico los simbolos terminales en mi caso base.
+            boolean derivaTodosTerminales = true;
+            for (Character simbolo : produccion.getSimbolos()){
+                boolean esTerminal = esSimboloTerminal(simbolo);
+                derivaTodosTerminales = derivaTodosTerminales && esTerminal;
+                if (esTerminal) {
+                    simbolosTerminalesBase.add((simbolo));
+                }
+            }
+            if (derivaTodosTerminales) {
+                // hago esto porque por algun motivo el simbolo input no es un char.
+                simbolosUtiles.add(produccion.getSimboloInput().charAt(0));
+            }
+        }
+
+        List<Character> produccionesCasoInductiva = new ArrayList<>();
+        for(Character simbolo : simbolosUtiles){
+            for(Produccion produccion : getProducciones()) {
+                String produccionEnString = "";
+                for (Character simboloProduccion :produccion.getSimbolos())
+                    produccionEnString = produccionEnString.concat("" + simboloProduccion);
+                Pattern pattern = Pattern.compile(""+simbolo+"+");
+                Matcher matcher = pattern.matcher(produccionEnString);
+                if (matcher.matches()){
+                    simbolosUtiles.add(produccion.getSimboloInput().charAt(0));
+                }
+            }
+        }
+        List<Produccion> produccionesDeSimbolosGeneradores = new ArrayList<>();
+        boolean estadoInicialEstaContenido = false;
+        for(Produccion produccion : getProducciones()){
+            boolean hayUnSimboloInutil = false;
+            for (Character simbolo : produccion.getSimbolos())
+                hayUnSimboloInutil = hayUnSimboloInutil || (!simbolosUtiles.contains(simbolo)
+                        && !simbolosTerminalesBase.contains(simbolo));
+            if (simbolosUtiles.contains(produccion.getSimboloInput().charAt(0)) && !hayUnSimboloInutil) {
+                if (produccion.getSimboloInput().equals(estadoInicial))
+                    estadoInicialEstaContenido = true;
+                produccionesDeSimbolosGeneradores.add(produccion);
+            }
+
+        }
+        //Si no hubiese estado inicial, significa que esta gramatica no forma ningun string
+        setProducciones(estadoInicialEstaContenido ? produccionesDeSimbolosGeneradores : new ArrayList<>());
+    }
+
+    private boolean esSimboloTerminal(Character simbolo)
+    {
+        Pattern pattern = Pattern.compile(terminalPatternString);
+        Matcher matcher = pattern.matcher(""+simbolo);
+        return matcher.matches();
     }
 
     public void eliminarSimbolosNoAlcanzables() {
