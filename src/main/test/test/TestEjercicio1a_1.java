@@ -63,14 +63,13 @@ class TestEjercicio1a_1 {
 
 
 	@org.junit.jupiter.api.Test
-	public void testGramatica_1_EliminarE() throws FileNotFoundException, BadFileException {
+	public void testGramatica_2_EliminarE() throws FileNotFoundException, BadFileException {
 
 		System.out.println("--------------------------");
-		System.out.println("testGramatica_1_EliminarE");
+		System.out.println("testGramatica_2_EliminarE");
 		System.out.println("--------------------------");
 
-		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_1.txt");
-
+		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_2.txt");
 
 		System.out.println("Gramatica =>" + gramatica);
 
@@ -89,55 +88,32 @@ class TestEjercicio1a_1 {
 		assertTrue(result);
 	}
 
-	/*@org.junit.jupiter.api.Test
-	public void testGramatica_1_EliminarProdUnitarias() throws FileNotFoundException, BadFileException {
-
-		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_1.txt");
-
-		gramatica.eliminarProdUnitarias();
-
-		boolean result = true;
-
-		for (Produccion p : gramatica.getProducciones())
-			for (Character c : p.getSimbolos() )
-				if(c.equals('E'))
-					result = false;
-
-		assertTrue(result);
-	}
-
 	@org.junit.jupiter.api.Test
-	public void testGramatica_1_EliminarSimbolosNoGeneradores() throws FileNotFoundException, BadFileException {
+	public void testGramatica_2_EliminarProduccionesUnitarias() throws FileNotFoundException, BadFileException {
 
-		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_1.txt");
+		/*System.out.println("--------------------------");
+		System.out.println("testGramatica_2_EliminarProduccionesUnitarias");
+		System.out.println("--------------------------");
 
-		gramatica.eliminarProdUnitarias();
+		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_2.txt");
 
-		boolean result = true;
 
-		for (Produccion p : gramatica.getProducciones())
-			for (Character c : p.getSimbolos() )
-				if(c.equals('E'))
-					result = false;
+		System.out.println("Gramatica =>" + gramatica);
 
-		assertTrue(result);
-	}
-
-	@org.junit.jupiter.api.Test
-	public void testGramatica_1_EliminarSimbolosNoAlcanzables() throws FileNotFoundException, BadFileException {
-
-		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_1.txt");
-
-		gramatica.eliminarSimbolosNoAlcanzables();
+		gramatica.eliminarProduccionesUnitarias();
 
 		boolean result = true;
 
-		for (Produccion p : gramatica.getProducciones())
-			for (Character c : p.getSimbolos() )
-				if(c.equals('E'))
+		for (Produccion p : gramatica.getProducciones()) {
+			for (Character c : p.getSimbolos())
+				if (c.equals('E'))
 					result = false;
+		}
 
-		assertTrue(result);
+		System.out.println("Nueva gramática =>" + gramatica);*/
+
+		//assertTrue(result);
 	}
-	*/
+
+
 }
