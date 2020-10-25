@@ -8,15 +8,15 @@ import gramatica.Produccion;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-class TestEjercicio1a_1 {
+public class TestEjercicio1a_1 {
 	
 	GramaticaService gramaticaService = new GramaticaService();
 
 
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testGramatica_0_NoMatchea() throws FileNotFoundException, BadFileException {
 
 		System.out.println("--------------------------");
@@ -36,7 +36,7 @@ class TestEjercicio1a_1 {
 		assertFalse(result);
 	}
 
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testGramatica_1() throws FileNotFoundException, BadFileException {
 
 		System.out.println("--------------------------");
@@ -62,7 +62,7 @@ class TestEjercicio1a_1 {
 
 
 
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testGramatica_2_EliminarE() throws FileNotFoundException, BadFileException {
 
 		System.out.println("--------------------------");
@@ -88,7 +88,7 @@ class TestEjercicio1a_1 {
 		assertTrue(result);
 	}
 
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testGramatica_2_EliminarProduccionesUnitarias() throws FileNotFoundException, BadFileException {
 
 		/*System.out.println("--------------------------");
@@ -114,6 +114,4 @@ class TestEjercicio1a_1 {
 
 		//assertTrue(result);
 	}
-
-
 }

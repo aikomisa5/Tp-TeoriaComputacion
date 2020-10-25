@@ -1,5 +1,4 @@
 package test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,9 +8,10 @@ import automata.Automata;
 import automata.AutomataService;
 import automata.Proyeccion;
 import exceptions.BadFileException;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-class TestEjercicio2a_1 {
+public class TestEjercicio2a_1 {
 	
 	AutomataService automataService = new AutomataService();
 	
