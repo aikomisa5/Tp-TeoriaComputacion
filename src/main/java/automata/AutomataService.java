@@ -65,9 +65,21 @@ public class AutomataService {
 
 		response.setEstadoInicial(getEstadoFromListado(nuevoEstadoInicialListado));
 		response.setProyecciones(completarProyeccionesAEstadoTrampa(response.getProyecciones(), estados, response.getSimbolosInput()));
+		
+		if (automataPoseeEstadoTrampa(response.getProyecciones()) == true) {
+			int cantEstadosActual =  response.getCantEstados();
+			response.setCantEstados(cantEstadosActual + 1);
+			
+			List<List<String>> estadosListadoActual = new ArrayList<List<String>>(response.getEstadosListado());
+			List<String> estadoTrampaListado = new ArrayList<String>();
+			estadoTrampaListado.add(ESTADO_TRAMPA);
+			estadosListadoActual.add(estadoTrampaListado);
+			response.setEstadosListado(estadosListadoActual);
+		}
 
 		return response;
 	}
+
 
 	public boolean procesar(String w,String nombreAutomata) throws FileNotFoundException, BadFileException {
 
@@ -84,6 +96,20 @@ public class AutomataService {
 	 * Metodos privados 
 	 **/
 
+	private boolean automataPoseeEstadoTrampa(List<Proyeccion> proyecciones) {
+		
+		boolean response = false;
+		
+		for (Proyeccion proyeccion : proyecciones) {
+			if (proyeccion.getEstadoSalida().equals(ESTADO_TRAMPA) || proyeccion.getEstadoLlegada().equals(ESTADO_TRAMPA)) {
+				response = true;
+				break;
+			}
+		}
+		
+		return response;
+	}
+	
 	private List<Proyeccion> completarProyeccionesAEstadoTrampa(List<Proyeccion> proyecciones, List<String> estados, List<String> simbolosInput) {
 
 		List<Proyeccion> response = new ArrayList<Proyeccion>(proyecciones);

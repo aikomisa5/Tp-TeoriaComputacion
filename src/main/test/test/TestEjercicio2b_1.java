@@ -1,34 +1,36 @@
 package test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileNotFoundException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.Test;
 
 import automata.Automata;
 import automata.AutomataService;
 import exceptions.BadFileException;
 
-class Test {
+@TestInstance(Lifecycle.PER_CLASS)
+class TestEjercicio2b_1 {
 	
 	AutomataService automataService = new AutomataService();
-	
+
 	Automata e_afnd = new Automata();
 	Automata afd = new Automata();
 	String nombreAutomata = "automata.txt";
 
-	@org.junit.jupiter.api.Test
-	public void testAutomata() throws FileNotFoundException, BadFileException {
-
+	@BeforeAll
+	public void setup() throws FileNotFoundException, BadFileException {
+		//TODO la idea para mi seria usar esto.. el tema es que como esta definido el metodo procesar (por el profe) no se puede usarlo..
 		e_afnd = automataService.getAutomataFromTxtFile(nombreAutomata);
 		afd = automataService.getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 
-		automataService.printAutomata(e_afnd, "E-AFND");
-		automataService.printAutomata(afd, "AFD");
-
-		//TODO chequear el resultado final para definir por qu� esto deberia dar exito
-		assertTrue(true);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaA() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -41,7 +43,7 @@ class Test {
 		assertTrue(aaaaaaaaaa);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaC() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -54,7 +56,7 @@ class Test {
 		assertTrue(cccccccc);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaABA() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -67,7 +69,7 @@ class Test {
 		assertTrue(aba);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaABABA() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -80,7 +82,7 @@ class Test {
 		assertTrue(ababa);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaABCABC() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -93,7 +95,7 @@ class Test {
 		assertTrue(abcabc);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaBB() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -106,7 +108,7 @@ class Test {
 		assertTrue(bb);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaBBB() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
@@ -119,7 +121,7 @@ class Test {
 		assertFalse(bbb);
 	}
 	
-	@org.junit.jupiter.api.Test
+	@Test
 	public void testProcesarCadenaAB() throws FileNotFoundException, BadFileException {
 		
 		System.out.println("--------------------");
