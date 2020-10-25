@@ -13,17 +13,18 @@ class Test {
 	
 	Automata e_afnd = new Automata();
 	Automata afd = new Automata();
+	String nombreAutomata = "automata.txt";
 
 	@org.junit.jupiter.api.Test
 	public void testAutomata() throws FileNotFoundException, BadFileException {
 
-		e_afnd = automataService.getAutomataFromTxtFile();
+		e_afnd = automataService.getAutomataFromTxtFile(nombreAutomata);
 		afd = automataService.getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 
 		automataService.printAutomata(e_afnd, "E-AFND");
 		automataService.printAutomata(afd, "AFD");
 
-		//TODO chequear el resultado final para definir por qué esto deberia dar exito
+		//TODO chequear el resultado final para definir por quï¿½ esto deberia dar exito
 		assertTrue(true);
 	}
 	
@@ -34,7 +35,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean aaaaaaaaaa = automataService.procesar("aaaaaaaaaa");
+		boolean aaaaaaaaaa = automataService.procesar("aaaaaaaaaa",nombreAutomata);
 		System.out.println("aaaaaaaaaa pertenece? : " + aaaaaaaaaa);
 
 		assertTrue(aaaaaaaaaa);
@@ -47,7 +48,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean cccccccc = automataService.procesar("cccccccc");
+		boolean cccccccc = automataService.procesar("cccccccc",nombreAutomata);
 		System.out.println("cccccccc pertenece? : " + cccccccc);
 		
 		assertTrue(cccccccc);
@@ -60,7 +61,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean aba = automataService.procesar("aba");
+		boolean aba = automataService.procesar("aba",nombreAutomata);
 		System.out.println("aba pertenece? : " + aba);
 		
 		assertTrue(aba);
@@ -73,7 +74,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean ababa = automataService.procesar("ababa");
+		boolean ababa = automataService.procesar("ababa",nombreAutomata);
 		System.out.println("ababa pertenece? : " + ababa);
 		
 		assertTrue(ababa);
@@ -86,7 +87,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean abcabc = automataService.procesar("abcabc");
+		boolean abcabc = automataService.procesar("abcabc",nombreAutomata);
 		System.out.println("abcabc pertenece? : " + abcabc);
 		
 		assertTrue(abcabc);
@@ -99,7 +100,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean bb = automataService.procesar("bb");
+		boolean bb = automataService.procesar("bb",nombreAutomata);
 		System.out.println("bb pertenece? : " + bb);
 		
 		assertTrue(bb);
@@ -112,7 +113,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 		
-		boolean bbb = automataService.procesar("bbb");
+		boolean bbb = automataService.procesar("bbb",nombreAutomata);
 		System.out.println("bbb pertenece? : " + bbb);
 		
 		assertFalse(bbb);
@@ -125,7 +126,7 @@ class Test {
 		System.out.println("Procesado de Strings");
 		System.out.println("--------------------");
 
-		boolean ab = automataService.procesar("ab");
+		boolean ab = automataService.procesar("ab",nombreAutomata);
 		System.out.println("ab pertenece? : " + ab);
 		
 		assertTrue(ab);
