@@ -140,4 +140,40 @@ public class TestEjercicio1a_generadores {
         assertTrue( produccionACheckear.getSimboloInput().equals("A")
                 && produccionACheckear.getSimbolos().get(0).equals('a'));
     }
+    
+    @org.junit.jupiter.api.Test
+    public void generadoresEraUnBugTest(){
+        boolean result = true;
+        Gramatica gramatica = null;
+        try {
+            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_generadores_bugHunt1.txt");
+        }catch (FileNotFoundException e){
+            result = false;
+        }catch (BadFileException e2){
+            result = false;
+        }
+
+        gramatica.eliminarSimbolosNoGeneradores();
+
+        assertTrue( result && gramatica.getProducciones().size() == 3);
+
+       /* for(Produccion produccion : gramatica.getProducciones()) {
+            System.out.println(produccion);
+        }*/
+
+        Produccion produccionACheckear = gramatica.getProducciones().get(0);
+        assertTrue( produccionACheckear.getSimboloInput().equals("S")
+        		&& produccionACheckear.getSimbolos().get(0).equals('C')
+                && produccionACheckear.getSimbolos().get(1).equals('A'));
+
+        produccionACheckear = gramatica.getProducciones().get(1);
+
+        assertTrue( produccionACheckear.getSimboloInput().equals("A")
+                && produccionACheckear.getSimbolos().get(0).equals('a'));
+
+        produccionACheckear = gramatica.getProducciones().get(2);
+
+        assertTrue( produccionACheckear.getSimboloInput().equals("C")
+                && produccionACheckear.getSimbolos().get(0).equals('b'));
+    }
 }
