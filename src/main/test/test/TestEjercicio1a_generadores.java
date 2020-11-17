@@ -7,14 +7,14 @@ import gramatica.Produccion;
 
 import java.io.FileNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class TestEjercicio1a_generadores {
 
     GramaticaService gramaticaService = new GramaticaService();
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void sUsadoMultiplesVeces(){
 
         boolean result = true;
@@ -29,7 +29,7 @@ public class TestEjercicio1a_generadores {
         assertTrue(result);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void sNoDerivaNada1Test(){
 
         boolean result = true;
@@ -48,7 +48,7 @@ public class TestEjercicio1a_generadores {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void sNoDerivaNada2Test(){
 
         boolean result = true;
@@ -68,7 +68,7 @@ public class TestEjercicio1a_generadores {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void generadores1Test(){
 
         boolean result = true;
@@ -107,7 +107,7 @@ public class TestEjercicio1a_generadores {
                 && produccionACheckear.getSimbolos().get(0).equals('c'));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void generadores2Test(){
 
         boolean result = true;
@@ -140,8 +140,8 @@ public class TestEjercicio1a_generadores {
         assertTrue( produccionACheckear.getSimboloInput().equals("A")
                 && produccionACheckear.getSimbolos().get(0).equals('a'));
     }
-    
-    @org.junit.jupiter.api.Test
+
+    @Test
     public void generadoresEraUnBugTest(){
         boolean result = true;
         Gramatica gramatica = null;
