@@ -1,0 +1,10 @@
+S -> aB
+S -> bX
+A -> Bad
+A -> bSX
+A -> a
+B -> aSB
+B -> bBX
+X -> SBD
+X -> aBx
+X -> ad
