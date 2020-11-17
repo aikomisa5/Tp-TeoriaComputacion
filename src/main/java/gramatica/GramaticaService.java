@@ -95,11 +95,14 @@ public class GramaticaService {
                 throw new BadFileException(msj);
             }
 
-            if (cantEstadoInicial > 1) {
+          /* Este checkeo lo comentamos hasta consultar con ivo la duda de la tarjeta
+           * https://trello.com/c/3kRRqbuQ
+          if (cantEstadoInicial > 1) {
                 String msj = "Ocurrio un error, la gramática tiene más de un estado inicial S.";
                 System.out.println(msj);
                 throw new BadFileException(msj);
             }
+            */
 
 
         } catch (FileNotFoundException e) {
