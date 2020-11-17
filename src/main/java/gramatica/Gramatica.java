@@ -180,8 +180,6 @@ public class Gramatica {
                 // hago esto porque por algun motivo el simbolo input no es un char.
                 toPattern.append(produccion.getSimboloInput().charAt(0));
         }
-        System.out.println("Caso base");
-        System.out.println("simbolos: "+ toPattern.toString());
         Pattern pattern1 = Pattern.compile("["+toPattern.toString()+"]+");
 
         for (int i = 0; i < toPattern.toString().length(); i++) {
