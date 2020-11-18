@@ -1,49 +1,58 @@
 package automata;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.BadAutomataException;
+import exceptions.BadFileException;
+
 public class Automata {
+	
+	private AutomataService service;
 	
 	private List<String> simbolosInput;
 	private int cantEstados;
 	private List<String> estadosFinales;
-	private List<Proyeccion> proyecciones;
+	private List<Transicion> transiciones;
 	private List<String> estados;
 	private List<List<String>> estadosListado;
 	private String estadoInicial;
 	
 	public Automata() {
 		super();
+		service = new AutomataService();
 		simbolosInput = new ArrayList<String>();
 		cantEstados = 0;
 		estadosFinales = new ArrayList<String>();
-		proyecciones = new ArrayList<Proyeccion>();
+		transiciones = new ArrayList<Transicion>();
 		estados = new ArrayList<String>();
 		estadosListado = new ArrayList<List<String>>();
 		estadoInicial = new String();
 	}
 	
 	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
-			List<Proyeccion> proyecciones) {
+			List<Transicion> transiciones) {
 		super();
+		this.service = new AutomataService();
 		this.simbolosInput = simbolosInput;
 		this.cantEstados = cantEstados;
 		this.estadosFinales = estadosFinales;
-		this.proyecciones = proyecciones;
+		this.transiciones = transiciones;
 		this.estados = new ArrayList<String>();
 		this.estadosListado = new ArrayList<List<String>>();
 		this.estadoInicial = new String();
 	}
 	
 	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
-			List<Proyeccion> proyecciones, List<String> estados, List<List<String>> estadosListado,
+			List<Transicion> transiciones, List<String> estados, List<List<String>> estadosListado,
 			String estadoInicial) {
 		super();
+		this.service = new AutomataService();
 		this.simbolosInput = simbolosInput;
 		this.cantEstados = cantEstados;
 		this.estadosFinales = estadosFinales;
-		this.proyecciones = proyecciones;
+		this.transiciones = transiciones;
 		this.estados = estados;
 		this.estadosListado = estadosListado;
 		this.estadoInicial = estadoInicial;
@@ -73,12 +82,12 @@ public class Automata {
 		this.estadosFinales = estadosFinales;
 	}
 	
-	public List<Proyeccion> getProyecciones() {
-		return proyecciones;
+	public List<Transicion> getTransiciones() {
+		return transiciones;
 	}
 	
-	public void setProyecciones(List<Proyeccion> proyecciones) {
-		this.proyecciones = proyecciones;
+	public void setTransiciones(List<Transicion> transiciones) {
+		this.transiciones = transiciones;
 	}
 
 	public List<String> getEstados() {
@@ -103,6 +112,17 @@ public class Automata {
 
 	public void setEstadoInicial(String estadoInicial) {
 		this.estadoInicial = estadoInicial;
+	}
+	
+	public boolean procesar(String w) throws FileNotFoundException, BadFileException, BadAutomataException {
+
+		boolean response = false;
+
+//		Automata e_afnd = service.getAutomataFromTxtFile("automata.txt");
+//		Automata afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+		response = service.cadenaPerteneceAlAFD(w, this);
+
+		return response;
 	}
 
 	@Override
@@ -130,7 +150,7 @@ public class Automata {
         	return false;
         }
         
-        if (this.proyecciones.equals(automata.getProyecciones()) == false) {
+        if (this.transiciones.equals(automata.getTransiciones()) == false) {
         	return false;
         }
         
