@@ -1,0 +1,4 @@
+S -> bX
+A -> bSX
+A -> a
+X -> ad
