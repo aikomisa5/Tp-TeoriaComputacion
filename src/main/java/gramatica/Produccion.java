@@ -1,11 +1,12 @@
 package gramatica;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Produccion {
 
     private String simboloInput;
-    private ArrayList<Character> simbolos;
+    private List<Character> simbolos;
 
 
 
@@ -15,7 +16,7 @@ public class Produccion {
         simbolos = new ArrayList<>();
     }
 
-    public Produccion(String simboloInput, ArrayList<Character> simbolos) {
+    public Produccion(String simboloInput, List<Character> simbolos) {
         super();
         this.simboloInput = simboloInput;
         this.simbolos = simbolos;
@@ -29,11 +30,11 @@ public class Produccion {
         this.simboloInput = simboloInput;
     }
 
-    public ArrayList<Character> getSimbolos() {
+    public List<Character> getSimbolos() {
         return simbolos;
     }
 
-    public void setSimbolos(ArrayList<Character> simbolos) {
+    public void setSimbolos(List<Character> simbolos) {
         this.simbolos = simbolos;
     }
 
@@ -50,15 +51,12 @@ public class Produccion {
 
         final Produccion produccion = (Produccion) obj;
 
-
-        if (this.simboloInput.equals(produccion.getSimboloInput()) == false) {
+        if (!this.simboloInput.equals(produccion.getSimboloInput())) {
             return false;
         }
 
-        if (this.simbolos.equals(simbolos) == false) {
+        if (!this.simbolos.equals(produccion.simbolos))
             return false;
-        }
-
         return true;
     }
 

@@ -85,9 +85,9 @@ public class Gramatica {
         //3º Genero nueva gramática, analizando la anterior y agregando producciones nuevas para los casos nullables.
         for(Produccion p : getProducciones()) {
 
-            ArrayList<String> nullables = filtroNullables(p.getSimbolos(),N);
+            List<String> nullables = filtroNullables(p.getSimbolos(),N);
 
-            ArrayList<String> combinacionesNullables = obtenerCombinacionesNullables(nullables);
+            List<String> combinacionesNullables = obtenerCombinacionesNullables(nullables);
 
             //Genero nuevas producciones con las combinaciones de nullables
             for (String combinacion : combinacionesNullables) {
@@ -105,7 +105,7 @@ public class Gramatica {
                 }
                 //Caso particular para dejar sólo los terminales
                 if(!terminales.isEmpty()) {
-                    ArrayList<Character> terminalesSimbolos = getCharacters(terminales.toCharArray());
+                    List<Character> terminalesSimbolos = getCharacters(terminales.toCharArray());
                     Produccion newP = new Produccion(p.getSimboloInput(), terminalesSimbolos);
                     newProducciones.add(newP);
                 }
@@ -120,7 +120,7 @@ public class Gramatica {
         setProducciones(newProducciones);
     }
 
-    private ArrayList<Character> getCharacters(char[] toCharArray) {
+    private List<Character> getCharacters(char[] toCharArray) {
         ArrayList<Character> resultList = new ArrayList<>();
 
         for (int i = 0 ; i < toCharArray.length; i++){
@@ -131,7 +131,7 @@ public class Gramatica {
         return resultList;
     }
 
-    private ArrayList<String> obtenerCombinacionesNullables(ArrayList<String> nullables) {
+    private List<String> obtenerCombinacionesNullables(List<String> nullables) {
         ArrayList<String> result = new ArrayList<>();
         int n = nullables.size();
         int total = (int) Math.pow(2d, Double.valueOf(n));
@@ -149,9 +149,9 @@ public class Gramatica {
     }
 
 
-    private ArrayList<String> filtroNullables(ArrayList<Character> simbolos, List<Character> n) {
+    private List<String> filtroNullables(List<Character> simbolos, List<Character> n) {
 
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
         for (Character c : simbolos)
             if (n.contains(c))
@@ -219,6 +219,33 @@ public class Gramatica {
     }
 
     public void eliminarSimbolosNoAlcanzables() {
-        //TODO:
+        StringBuilder alcanzables = new StringBuilder(estadoInicial);
+        Pattern pattern1 = Pattern.compile("["+alcanzables.toString()+"]+");
+
+        for (int i = 0; i < alcanzables.toString().length(); i++) {
+            for(Produccion produccion : getProducciones()) {
+                Matcher matcher = pattern1.matcher(produccion.getSimboloInput());
+                if (matcher.matches()){
+                    for (Character simbolo : produccion.getSimbolos()){
+                        if (!alcanzables.toString().contains(""+simbolo)){
+                            alcanzables.append(simbolo);
+                            pattern1 = Pattern.compile("["+alcanzables.toString()+"]+");
+                        }
+                    }
+                }
+            }
+        }
+        List<Produccion> produccionesDeSimbolosNoAlcanzables = new ArrayList<>();
+        for(Produccion produccion : getProducciones()) {
+            boolean hayUnSimboloInutil = false;
+            if (alcanzables.toString().contains(produccion.getSimboloInput())) {
+                for (Character simbolo : produccion.getSimbolos()) {
+                    hayUnSimboloInutil = hayUnSimboloInutil || !alcanzables.toString().contains(""+simbolo);
+                }
+                if (!hayUnSimboloInutil)
+                    produccionesDeSimbolosNoAlcanzables.add(produccion);
+            }
+        }
+        setProducciones(produccionesDeSimbolosNoAlcanzables);
     }
 }

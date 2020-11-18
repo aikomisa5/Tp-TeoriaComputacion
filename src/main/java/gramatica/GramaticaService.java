@@ -74,7 +74,7 @@ public class GramaticaService {
 
                 produccion.setSimboloInput(parts[0].trim());
                 String simbolos = parts[1].trim();
-                ArrayList<Character> simbolosList = produccion.getSimbolos();
+                List<Character> simbolosList = produccion.getSimbolos();
 
                 for (int i = 0; i < simbolos.length(); i++) {
                     simbolosList.add(simbolos.charAt(i));
