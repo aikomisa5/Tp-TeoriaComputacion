@@ -11,6 +11,10 @@ public class Automata {
 	
 	private AutomataService service;
 	
+	/**
+	 * EstadosListado es una lista de listas, donde cada lista representa un estado del Automata
+	 **/
+	
 	private List<String> simbolosInput;
 	private int cantEstados;
 	private List<String> estadosFinales;

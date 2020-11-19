@@ -23,7 +23,7 @@ public class TestEjercicio2b_1 {
 
 	Automata e_afnd = new Automata();
 	Automata afd = new Automata();
-	String fileName = "automata.txt";
+	String fileName = "automata_1.txt";
 
 	@Before
 	public void setup() throws FileNotFoundException, BadFileException {

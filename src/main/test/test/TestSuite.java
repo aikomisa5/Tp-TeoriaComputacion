@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({TestEjercicio1a_1.class,
         TestEjercicio2a_1.class,
         TestEjercicio2a_2.class,
+        TestEjercicio2a_3.class,
         TestEjercicio2b_1.class,
         TestEjercicio1a_generadores.class,
         TestEjercicio1a_noAlcanzables.class,})

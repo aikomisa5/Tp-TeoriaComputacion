@@ -82,7 +82,13 @@ public class AutomataService {
 			estadosListadoActual.add(estadoTrampaListado);
 			afd.setEstadosListado(estadosListadoActual);
 		}
-
+		
+		Collections.sort(afd.getSimbolosInput());
+		Collections.sort(afd.getEstadosFinales());
+		Collections.sort(afd.getTransiciones());
+		Collections.sort(afd.getEstados());
+		Collections.sort(afd.getEstadosListado(), new ListComparator<>());
+		
 		return afd;
 	}
 
@@ -147,7 +153,7 @@ public class AutomataService {
 	 **/
 	
 	private Automata readAFNDFromTxtFile(String fileName) throws BadFileException, FileNotFoundException {
-		Automata response = new Automata();
+		Automata afnd = new Automata();
 
 		Scanner myReader = null;
 		int indice = 0;
@@ -174,7 +180,7 @@ public class AutomataService {
 						for(String simbolo : trim) {
 							simbolos.add(simbolo.trim());
 						}
-						response.setSimbolosInput(simbolos);
+						afnd.setSimbolosInput(simbolos);
 					}
 					catch(Exception e) {
 						String msj = "Ocurrio un error al intentar obtener los datos de los simbolos de input del archivo: " + e.getMessage();
@@ -184,7 +190,7 @@ public class AutomataService {
 				}
 				else if (indice == 1) {
 					try {
-						response.setCantEstados(Integer.valueOf(data));
+						afnd.setCantEstados(Integer.valueOf(data));
 					}
 					catch(Exception e) {
 						String msj = "Ocurrio un error al intentar obtener el dato de la cantidad de estados del archivo: " + e.getMessage();
@@ -196,7 +202,7 @@ public class AutomataService {
 				else if (indice == 2) {
 					try {
 						List<String> estadosFinales = new ArrayList<String>(Arrays.asList(data.split(",")));
-						response.setEstadosFinales(estadosFinales);
+						afnd.setEstadosFinales(estadosFinales);
 					}
 					catch(Exception e) {
 						String msj = "Ocurrio un error al intentar obtener los datos de los estados finales del archivo: " + e.getMessage();
@@ -243,8 +249,14 @@ public class AutomataService {
 				throw new BadFileException(msj);
 			}
 			else {
-				response.setTransiciones(transiciones);
+				afnd.setTransiciones(transiciones);
 			}
+			
+			Collections.sort(afnd.getSimbolosInput());
+			Collections.sort(afnd.getEstadosFinales());
+			Collections.sort(afnd.getTransiciones());
+			Collections.sort(afnd.getEstados());
+			Collections.sort(afnd.getEstadosListado(), new ListComparator<>());
 		}
 		catch(FileNotFoundException e) {
 			System.out.println("Ocurrio un error, debido a que no se encontro el archivo: " + e.getMessage());
@@ -256,7 +268,7 @@ public class AutomataService {
 			}
 		}
 
-		return response;
+		return afnd;
 	}
 
 	/**

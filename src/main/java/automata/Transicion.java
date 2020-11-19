@@ -1,6 +1,6 @@
 package automata;
 
-public class Transicion {
+public class Transicion implements Comparable<Transicion> {
 
 	private String estadoSalida;
 	private String simboloInput;
@@ -67,5 +67,22 @@ public class Transicion {
         }
 		
 		return true;
+	}
+
+	@Override
+	public int compareTo(Transicion o) {
+		int result1 = this.estadoSalida.compareTo(o.estadoSalida);
+		
+		if (result1 != 0) {
+			return result1;
+		}
+		
+		int result2 = this.simboloInput.compareTo(o.simboloInput);
+		
+		if (result2 != 0) {
+			return result2;
+		}
+		
+		return this.estadoLlegada.compareTo(o.estadoLlegada);
 	}
 }

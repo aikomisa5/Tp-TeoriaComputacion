@@ -1,28 +1,26 @@
 package test;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.junit.Test;
 
 import automata.Automata;
 import automata.AutomataService;
 import automata.ListComparator;
 import automata.Transicion;
 import exceptions.BadFileException;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class TestEjercicio2a_1 {
+public class TestEjercicio2a_3 {
 	
 	AutomataService automataService = new AutomataService();
 	
 	private Automata e_afnd = new Automata();
 	private Automata afd = new Automata();
 
-	String fileName = "automata_1.txt";
+	String fileName = "automata_3.txt";
 
 	@Test
 	public void testAutomata() throws FileNotFoundException, BadFileException {
@@ -61,10 +59,12 @@ public class TestEjercicio2a_1 {
 		
 		e_afnd_check.setSimbolosInput(simbolosInput);
 		
-		e_afnd_check.setCantEstados(3);
+		e_afnd_check.setCantEstados(4);
 		
 		List<String> estadosFinales = new ArrayList<String>();
+		estadosFinales.add("2");
 		estadosFinales.add("3");
+		estadosFinales.add("4");
 		
 		e_afnd_check.setEstadosFinales(estadosFinales);
 		
@@ -75,38 +75,33 @@ public class TestEjercicio2a_1 {
 		
 		Transicion proyeccion2 = new Transicion();
 		proyeccion2.setEstadoSalida("1");
-		proyeccion2.setSimboloInput("b");
-		proyeccion2.setEstadoLlegada("2");
+		proyeccion2.setSimboloInput("E");
+		proyeccion2.setEstadoLlegada("3");
 		
 		Transicion proyeccion3 = new Transicion();
 		proyeccion3.setEstadoSalida("1");
 		proyeccion3.setSimboloInput("E");
-		proyeccion3.setEstadoLlegada("3");
+		proyeccion3.setEstadoLlegada("4");
 		
 		Transicion proyeccion4 = new Transicion();
-		proyeccion4.setEstadoSalida("1");
-		proyeccion4.setSimboloInput("c");
+		proyeccion4.setEstadoSalida("2");
+		proyeccion4.setSimboloInput("a");
 		proyeccion4.setEstadoLlegada("3");
 		
 		Transicion proyeccion5 = new Transicion();
-		proyeccion5.setEstadoSalida("2");
-		proyeccion5.setSimboloInput("c");
-		proyeccion5.setEstadoLlegada("2");
+		proyeccion5.setEstadoSalida("3");
+		proyeccion5.setSimboloInput("b");
+		proyeccion5.setEstadoLlegada("4");
 		
 		Transicion proyeccion6 = new Transicion();
-		proyeccion6.setEstadoSalida("2");
-		proyeccion6.setSimboloInput("a");
-		proyeccion6.setEstadoLlegada("1");
+		proyeccion6.setEstadoSalida("3");
+		proyeccion6.setSimboloInput("c");
+		proyeccion6.setEstadoLlegada("2");
 		
 		Transicion proyeccion7 = new Transicion();
-		proyeccion7.setEstadoSalida("2");
-		proyeccion7.setSimboloInput("c");
-		proyeccion7.setEstadoLlegada("1");
-		
-		Transicion proyeccion8 = new Transicion();
-		proyeccion8.setEstadoSalida("2");
-		proyeccion8.setSimboloInput("b");
-		proyeccion8.setEstadoLlegada("3");
+		proyeccion7.setEstadoSalida("4");
+		proyeccion7.setSimboloInput("a");
+		proyeccion7.setEstadoLlegada("3");
 		
 		List<Transicion> proyecciones = new ArrayList<Transicion>();
 		proyecciones.add(proyeccion1);
@@ -116,7 +111,6 @@ public class TestEjercicio2a_1 {
 		proyecciones.add(proyeccion5);
 		proyecciones.add(proyeccion6);
 		proyecciones.add(proyeccion7);
-		proyecciones.add(proyeccion8);
 		
 		e_afnd_check.setTransiciones(proyecciones);
 		
@@ -140,74 +134,90 @@ public class TestEjercicio2a_1 {
 		
 		afd_check.setSimbolosInput(simbolosInput);
 		
-		afd_check.setCantEstados(4);
+		afd_check.setCantEstados(5);
 		
 		List<String> estadosFinales = new ArrayList<String>();
-		estadosFinales.add("123");
-		estadosFinales.add("23");
+		estadosFinales.add("1234");
+		estadosFinales.add("2");
 		estadosFinales.add("3");
+		estadosFinales.add("4");
 		
 		afd_check.setEstadosFinales(estadosFinales);
 		
 		Transicion proyeccion1 = new Transicion();
-		proyeccion1.setEstadoSalida("123");
-		proyeccion1.setSimboloInput("a");
-		proyeccion1.setEstadoLlegada("123");
+		proyeccion1.setEstadoSalida("1234");
+		proyeccion1.setSimboloInput("c");
+		proyeccion1.setEstadoLlegada("2");
 		
 		Transicion proyeccion2 = new Transicion();
-		proyeccion2.setEstadoSalida("123");
-		proyeccion2.setSimboloInput("b");
-		proyeccion2.setEstadoLlegada("23");
+		proyeccion2.setEstadoSalida("1234");
+		proyeccion2.setSimboloInput("a");
+		proyeccion2.setEstadoLlegada("3");
 		
 		Transicion proyeccion3 = new Transicion();
-		proyeccion3.setEstadoSalida("123");
-		proyeccion3.setSimboloInput("c");
-		proyeccion3.setEstadoLlegada("123");
+		proyeccion3.setEstadoSalida("1234");
+		proyeccion3.setSimboloInput("b");
+		proyeccion3.setEstadoLlegada("4");
 		
 		Transicion proyeccion4 = new Transicion();
-		proyeccion4.setEstadoSalida("23");
+		proyeccion4.setEstadoSalida("2");
 		proyeccion4.setSimboloInput("a");
-		proyeccion4.setEstadoLlegada("123");
+		proyeccion4.setEstadoLlegada("3");
 		
 		Transicion proyeccion5 = new Transicion();
-		proyeccion5.setEstadoSalida("23");
+		proyeccion5.setEstadoSalida("3");
 		proyeccion5.setSimboloInput("b");
-		proyeccion5.setEstadoLlegada("3");
+		proyeccion5.setEstadoLlegada("4");
 		
 		Transicion proyeccion6 = new Transicion();
-		proyeccion6.setEstadoSalida("23");
-		proyeccion6.setSimboloInput("c");
-		proyeccion6.setEstadoLlegada("123");
+		proyeccion6.setEstadoSalida("4");
+		proyeccion6.setSimboloInput("a");
+		proyeccion6.setEstadoLlegada("3");
 		
 		Transicion proyeccion7 = new Transicion();
-		proyeccion7.setEstadoSalida("3");
-		proyeccion7.setSimboloInput("a");
+		proyeccion7.setEstadoSalida("2");
+		proyeccion7.setSimboloInput("b");
 		proyeccion7.setEstadoLlegada("T");
 		
 		Transicion proyeccion8 = new Transicion();
-		proyeccion8.setEstadoSalida("3");
-		proyeccion8.setSimboloInput("b");
+		proyeccion8.setEstadoSalida("2");
+		proyeccion8.setSimboloInput("c");
 		proyeccion8.setEstadoLlegada("T");
 		
 		Transicion proyeccion9 = new Transicion();
 		proyeccion9.setEstadoSalida("3");
-		proyeccion9.setSimboloInput("c");
+		proyeccion9.setSimboloInput("a");
 		proyeccion9.setEstadoLlegada("T");
 		
 		Transicion proyeccion10 = new Transicion();
-		proyeccion10.setEstadoSalida("T");
-		proyeccion10.setSimboloInput("a");
-		proyeccion10.setEstadoLlegada("T");
+		proyeccion10.setEstadoSalida("3");
+		proyeccion10.setSimboloInput("c");
+		proyeccion10.setEstadoLlegada("2");
 		
 		Transicion proyeccion11 = new Transicion();
-		proyeccion11.setEstadoSalida("T");
+		proyeccion11.setEstadoSalida("4");
 		proyeccion11.setSimboloInput("b");
 		proyeccion11.setEstadoLlegada("T");
 		
 		Transicion proyeccion12 = new Transicion();
-		proyeccion12.setEstadoSalida("T");
+		proyeccion12.setEstadoSalida("4");
 		proyeccion12.setSimboloInput("c");
 		proyeccion12.setEstadoLlegada("T");
+		
+		Transicion proyeccion13 = new Transicion();
+		proyeccion13.setEstadoSalida("T");
+		proyeccion13.setSimboloInput("a");
+		proyeccion13.setEstadoLlegada("T");
+		
+		Transicion proyeccion14 = new Transicion();
+		proyeccion14.setEstadoSalida("T");
+		proyeccion14.setSimboloInput("b");
+		proyeccion14.setEstadoLlegada("T");
+		
+		Transicion proyeccion15 = new Transicion();
+		proyeccion15.setEstadoSalida("T");
+		proyeccion15.setSimboloInput("c");
+		proyeccion15.setEstadoLlegada("T");
 		
 		List<Transicion> proyecciones = new ArrayList<Transicion>();
 		proyecciones.add(proyeccion1);
@@ -222,10 +232,13 @@ public class TestEjercicio2a_1 {
 		proyecciones.add(proyeccion10);
 		proyecciones.add(proyeccion11);
 		proyecciones.add(proyeccion12);
+		proyecciones.add(proyeccion13);
+		proyecciones.add(proyeccion14);
+		proyecciones.add(proyeccion15);
 		
 		afd_check.setTransiciones(proyecciones);
 		
-		afd_check.setEstadoInicial("123");
+		afd_check.setEstadoInicial("1234");
 		
 		List<List<String>> estadosListado = new ArrayList<List<String>>();
 		
@@ -233,21 +246,25 @@ public class TestEjercicio2a_1 {
 		estado1.add("1");
 		estado1.add("2");
 		estado1.add("3");
+		estado1.add("4");
 		
 		List<String> estado2 = new ArrayList<String>();
 		estado2.add("2");
-		estado2.add("3");
 		
 		List<String> estado3 = new ArrayList<String>();
 		estado3.add("3");
 		
 		List<String> estado4 = new ArrayList<String>();
-		estado4.add("T");
+		estado4.add("4");
+		
+		List<String> estado5 = new ArrayList<String>();
+		estado5.add("T");
 		
 		estadosListado.add(estado1);
 		estadosListado.add(estado2);
 		estadosListado.add(estado3);
 		estadosListado.add(estado4);
+		estadosListado.add(estado5);
 		
 		afd_check.setEstadosListado(estadosListado);
 		
