@@ -1,0 +1,7 @@
+S -> ASB
+S -> e
+A -> aAS
+A -> a
+B -> SbS
+B -> A
+B -> bb

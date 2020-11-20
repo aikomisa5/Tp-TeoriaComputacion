@@ -9,7 +9,8 @@ import org.junit.runners.Suite;
         TestEjercicio2a_2.class,
         TestEjercicio2b_1.class,
         TestEjercicio1a_generadores.class,
-        TestEjercicio1a_noAlcanzables.class,})
+        TestEjercicio1a_noAlcanzables.class,
+        TestEjercicio1a_isFNC.class})
 class TestSuite {
 	
 }
