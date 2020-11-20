@@ -1,21 +1,18 @@
 package test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import org.junit.Test;
+
 import automata.Automata;
-import automata.AutomataService;
-import automata.ListComparator;
 import automata.Transicion;
 import exceptions.BadFileException;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
-public class TestEjercicio2a_3 {
-	
-	AutomataService automataService = new AutomataService();
+public class TestEjercicio2a_3 extends TestAutomataBase{
 	
 	private Automata e_afnd = new Automata();
 	private Automata afd = new Automata();
@@ -27,11 +24,14 @@ public class TestEjercicio2a_3 {
 
 		boolean testExitoso = true;
 		
-		e_afnd = automataService.getAFNDFromTxtFile(fileName);
-		afd = automataService.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+		e_afnd = service.getAFNDFromTxtFile(fileName);
+		afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 
-		automataService.printAutomata(e_afnd, "E-AFND");
-		automataService.printAutomata(afd, "AFD");
+		System.out.println(LINEA);
+		System.out.println("TEST 3");
+		System.out.println(LINEA);
+		service.printAutomata(e_afnd, "E-AFND");
+		service.printAutomata(afd, "AFD");
 		
 		Automata e_afnd_check = getEAFNDToCheck();
 		
@@ -68,57 +68,53 @@ public class TestEjercicio2a_3 {
 		
 		e_afnd_check.setEstadosFinales(estadosFinales);
 		
-		Transicion proyeccion1 = new Transicion();
-		proyeccion1.setEstadoSalida("1");
-		proyeccion1.setSimboloInput("E");
-		proyeccion1.setEstadoLlegada("2");
+		Transicion transicion1 = new Transicion();
+		transicion1.setEstadoSalida("1");
+		transicion1.setSimboloInput("E");
+		transicion1.setEstadoLlegada("2");
 		
-		Transicion proyeccion2 = new Transicion();
-		proyeccion2.setEstadoSalida("1");
-		proyeccion2.setSimboloInput("E");
-		proyeccion2.setEstadoLlegada("3");
+		Transicion transicion2 = new Transicion();
+		transicion2.setEstadoSalida("1");
+		transicion2.setSimboloInput("E");
+		transicion2.setEstadoLlegada("3");
 		
-		Transicion proyeccion3 = new Transicion();
-		proyeccion3.setEstadoSalida("1");
-		proyeccion3.setSimboloInput("E");
-		proyeccion3.setEstadoLlegada("4");
+		Transicion transicion3 = new Transicion();
+		transicion3.setEstadoSalida("1");
+		transicion3.setSimboloInput("E");
+		transicion3.setEstadoLlegada("4");
 		
-		Transicion proyeccion4 = new Transicion();
-		proyeccion4.setEstadoSalida("2");
-		proyeccion4.setSimboloInput("a");
-		proyeccion4.setEstadoLlegada("3");
+		Transicion transicion4 = new Transicion();
+		transicion4.setEstadoSalida("2");
+		transicion4.setSimboloInput("a");
+		transicion4.setEstadoLlegada("3");
 		
-		Transicion proyeccion5 = new Transicion();
-		proyeccion5.setEstadoSalida("3");
-		proyeccion5.setSimboloInput("b");
-		proyeccion5.setEstadoLlegada("4");
+		Transicion transicion5 = new Transicion();
+		transicion5.setEstadoSalida("3");
+		transicion5.setSimboloInput("b");
+		transicion5.setEstadoLlegada("4");
 		
-		Transicion proyeccion6 = new Transicion();
-		proyeccion6.setEstadoSalida("3");
-		proyeccion6.setSimboloInput("c");
-		proyeccion6.setEstadoLlegada("2");
+		Transicion transicion6 = new Transicion();
+		transicion6.setEstadoSalida("3");
+		transicion6.setSimboloInput("c");
+		transicion6.setEstadoLlegada("2");
 		
-		Transicion proyeccion7 = new Transicion();
-		proyeccion7.setEstadoSalida("4");
-		proyeccion7.setSimboloInput("a");
-		proyeccion7.setEstadoLlegada("3");
+		Transicion transicion7 = new Transicion();
+		transicion7.setEstadoSalida("4");
+		transicion7.setSimboloInput("a");
+		transicion7.setEstadoLlegada("3");
 		
-		List<Transicion> proyecciones = new ArrayList<Transicion>();
-		proyecciones.add(proyeccion1);
-		proyecciones.add(proyeccion2);
-		proyecciones.add(proyeccion3);
-		proyecciones.add(proyeccion4);
-		proyecciones.add(proyeccion5);
-		proyecciones.add(proyeccion6);
-		proyecciones.add(proyeccion7);
+		List<Transicion> transiciones = new ArrayList<Transicion>();
+		transiciones.add(transicion1);
+		transiciones.add(transicion2);
+		transiciones.add(transicion3);
+		transiciones.add(transicion4);
+		transiciones.add(transicion5);
+		transiciones.add(transicion6);
+		transiciones.add(transicion7);
 		
-		e_afnd_check.setTransiciones(proyecciones);
+		e_afnd_check.setTransiciones(transiciones);
 		
-		Collections.sort(e_afnd_check.getSimbolosInput());
-		Collections.sort(e_afnd_check.getEstadosFinales());
-		Collections.sort(e_afnd_check.getTransiciones());
-		Collections.sort(e_afnd_check.getEstados());
-		Collections.sort(e_afnd_check.getEstadosListado(), new ListComparator<>());
+		service.ordenarAutomata(e_afnd_check);
 		
 		return e_afnd_check;
 	}
@@ -144,99 +140,99 @@ public class TestEjercicio2a_3 {
 		
 		afd_check.setEstadosFinales(estadosFinales);
 		
-		Transicion proyeccion1 = new Transicion();
-		proyeccion1.setEstadoSalida("1234");
-		proyeccion1.setSimboloInput("c");
-		proyeccion1.setEstadoLlegada("2");
+		Transicion transicion1 = new Transicion();
+		transicion1.setEstadoSalida("1234");
+		transicion1.setSimboloInput("c");
+		transicion1.setEstadoLlegada("2");
 		
-		Transicion proyeccion2 = new Transicion();
-		proyeccion2.setEstadoSalida("1234");
-		proyeccion2.setSimboloInput("a");
-		proyeccion2.setEstadoLlegada("3");
+		Transicion transicion2 = new Transicion();
+		transicion2.setEstadoSalida("1234");
+		transicion2.setSimboloInput("a");
+		transicion2.setEstadoLlegada("3");
 		
-		Transicion proyeccion3 = new Transicion();
-		proyeccion3.setEstadoSalida("1234");
-		proyeccion3.setSimboloInput("b");
-		proyeccion3.setEstadoLlegada("4");
+		Transicion transicion3 = new Transicion();
+		transicion3.setEstadoSalida("1234");
+		transicion3.setSimboloInput("b");
+		transicion3.setEstadoLlegada("4");
 		
-		Transicion proyeccion4 = new Transicion();
-		proyeccion4.setEstadoSalida("2");
-		proyeccion4.setSimboloInput("a");
-		proyeccion4.setEstadoLlegada("3");
+		Transicion transicion4 = new Transicion();
+		transicion4.setEstadoSalida("2");
+		transicion4.setSimboloInput("a");
+		transicion4.setEstadoLlegada("3");
 		
-		Transicion proyeccion5 = new Transicion();
-		proyeccion5.setEstadoSalida("3");
-		proyeccion5.setSimboloInput("b");
-		proyeccion5.setEstadoLlegada("4");
+		Transicion transicion5 = new Transicion();
+		transicion5.setEstadoSalida("3");
+		transicion5.setSimboloInput("b");
+		transicion5.setEstadoLlegada("4");
 		
-		Transicion proyeccion6 = new Transicion();
-		proyeccion6.setEstadoSalida("4");
-		proyeccion6.setSimboloInput("a");
-		proyeccion6.setEstadoLlegada("3");
+		Transicion transicion6 = new Transicion();
+		transicion6.setEstadoSalida("4");
+		transicion6.setSimboloInput("a");
+		transicion6.setEstadoLlegada("3");
 		
-		Transicion proyeccion7 = new Transicion();
-		proyeccion7.setEstadoSalida("2");
-		proyeccion7.setSimboloInput("b");
-		proyeccion7.setEstadoLlegada("T");
+		Transicion transicion7 = new Transicion();
+		transicion7.setEstadoSalida("2");
+		transicion7.setSimboloInput("b");
+		transicion7.setEstadoLlegada("T");
 		
-		Transicion proyeccion8 = new Transicion();
-		proyeccion8.setEstadoSalida("2");
-		proyeccion8.setSimboloInput("c");
-		proyeccion8.setEstadoLlegada("T");
+		Transicion transicion8 = new Transicion();
+		transicion8.setEstadoSalida("2");
+		transicion8.setSimboloInput("c");
+		transicion8.setEstadoLlegada("T");
 		
-		Transicion proyeccion9 = new Transicion();
-		proyeccion9.setEstadoSalida("3");
-		proyeccion9.setSimboloInput("a");
-		proyeccion9.setEstadoLlegada("T");
+		Transicion transicion9 = new Transicion();
+		transicion9.setEstadoSalida("3");
+		transicion9.setSimboloInput("a");
+		transicion9.setEstadoLlegada("T");
 		
-		Transicion proyeccion10 = new Transicion();
-		proyeccion10.setEstadoSalida("3");
-		proyeccion10.setSimboloInput("c");
-		proyeccion10.setEstadoLlegada("2");
+		Transicion transicion10 = new Transicion();
+		transicion10.setEstadoSalida("3");
+		transicion10.setSimboloInput("c");
+		transicion10.setEstadoLlegada("2");
 		
-		Transicion proyeccion11 = new Transicion();
-		proyeccion11.setEstadoSalida("4");
-		proyeccion11.setSimboloInput("b");
-		proyeccion11.setEstadoLlegada("T");
+		Transicion transicion11 = new Transicion();
+		transicion11.setEstadoSalida("4");
+		transicion11.setSimboloInput("b");
+		transicion11.setEstadoLlegada("T");
 		
-		Transicion proyeccion12 = new Transicion();
-		proyeccion12.setEstadoSalida("4");
-		proyeccion12.setSimboloInput("c");
-		proyeccion12.setEstadoLlegada("T");
+		Transicion transicion12 = new Transicion();
+		transicion12.setEstadoSalida("4");
+		transicion12.setSimboloInput("c");
+		transicion12.setEstadoLlegada("T");
 		
-		Transicion proyeccion13 = new Transicion();
-		proyeccion13.setEstadoSalida("T");
-		proyeccion13.setSimboloInput("a");
-		proyeccion13.setEstadoLlegada("T");
+		Transicion transicion13 = new Transicion();
+		transicion13.setEstadoSalida("T");
+		transicion13.setSimboloInput("a");
+		transicion13.setEstadoLlegada("T");
 		
-		Transicion proyeccion14 = new Transicion();
-		proyeccion14.setEstadoSalida("T");
-		proyeccion14.setSimboloInput("b");
-		proyeccion14.setEstadoLlegada("T");
+		Transicion transicion14 = new Transicion();
+		transicion14.setEstadoSalida("T");
+		transicion14.setSimboloInput("b");
+		transicion14.setEstadoLlegada("T");
 		
-		Transicion proyeccion15 = new Transicion();
-		proyeccion15.setEstadoSalida("T");
-		proyeccion15.setSimboloInput("c");
-		proyeccion15.setEstadoLlegada("T");
+		Transicion transicion15 = new Transicion();
+		transicion15.setEstadoSalida("T");
+		transicion15.setSimboloInput("c");
+		transicion15.setEstadoLlegada("T");
 		
-		List<Transicion> proyecciones = new ArrayList<Transicion>();
-		proyecciones.add(proyeccion1);
-		proyecciones.add(proyeccion2);
-		proyecciones.add(proyeccion3);
-		proyecciones.add(proyeccion4);
-		proyecciones.add(proyeccion5);
-		proyecciones.add(proyeccion6);
-		proyecciones.add(proyeccion7);
-		proyecciones.add(proyeccion8);
-		proyecciones.add(proyeccion9);
-		proyecciones.add(proyeccion10);
-		proyecciones.add(proyeccion11);
-		proyecciones.add(proyeccion12);
-		proyecciones.add(proyeccion13);
-		proyecciones.add(proyeccion14);
-		proyecciones.add(proyeccion15);
+		List<Transicion> transiciones = new ArrayList<Transicion>();
+		transiciones.add(transicion1);
+		transiciones.add(transicion2);
+		transiciones.add(transicion3);
+		transiciones.add(transicion4);
+		transiciones.add(transicion5);
+		transiciones.add(transicion6);
+		transiciones.add(transicion7);
+		transiciones.add(transicion8);
+		transiciones.add(transicion9);
+		transiciones.add(transicion10);
+		transiciones.add(transicion11);
+		transiciones.add(transicion12);
+		transiciones.add(transicion13);
+		transiciones.add(transicion14);
+		transiciones.add(transicion15);
 		
-		afd_check.setTransiciones(proyecciones);
+		afd_check.setTransiciones(transiciones);
 		
 		afd_check.setEstadoInicial("1234");
 		
@@ -268,11 +264,7 @@ public class TestEjercicio2a_3 {
 		
 		afd_check.setEstadosListado(estadosListado);
 		
-		Collections.sort(afd_check.getSimbolosInput());
-		Collections.sort(afd_check.getEstadosFinales());
-		Collections.sort(afd_check.getTransiciones());
-		Collections.sort(afd_check.getEstados());
-		Collections.sort(afd_check.getEstadosListado(), new ListComparator<>());
+		service.ordenarAutomata(afd_check);
 		
 		return afd_check;
 	}

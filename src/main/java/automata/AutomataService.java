@@ -21,6 +21,7 @@ public class AutomataService {
 	private static final String EPSILON = "E";
 	private static final String ESTADO_INICIAL = "1";
 	private static final String ESTADO_TRAMPA = "T";
+	private static final String LINEA = "----------------------------------------";
 
 	/**
 	 * Metodos publicos
@@ -83,11 +84,7 @@ public class AutomataService {
 			afd.setEstadosListado(estadosListadoActual);
 		}
 		
-		Collections.sort(afd.getSimbolosInput());
-		Collections.sort(afd.getEstadosFinales());
-		Collections.sort(afd.getTransiciones());
-		Collections.sort(afd.getEstados());
-		Collections.sort(afd.getEstadosListado(), new ListComparator<>());
+		ordenarAutomata(afd);
 		
 		return afd;
 	}
@@ -146,6 +143,15 @@ public class AutomataService {
 		}
 
 		return response;
+	}
+	
+	public void ordenarAutomata (Automata automata) {
+		
+		Collections.sort(automata.getSimbolosInput());
+		Collections.sort(automata.getEstadosFinales());
+		Collections.sort(automata.getTransiciones());
+		Collections.sort(automata.getEstados());
+		Collections.sort(automata.getEstadosListado(), new ListComparator<>());
 	}
 
 	/**
@@ -252,11 +258,7 @@ public class AutomataService {
 				afnd.setTransiciones(transiciones);
 			}
 			
-			Collections.sort(afnd.getSimbolosInput());
-			Collections.sort(afnd.getEstadosFinales());
-			Collections.sort(afnd.getTransiciones());
-			Collections.sort(afnd.getEstados());
-			Collections.sort(afnd.getEstadosListado(), new ListComparator<>());
+			ordenarAutomata(afnd);
 		}
 		catch(FileNotFoundException e) {
 			System.out.println("Ocurrio un error, debido a que no se encontro el archivo: " + e.getMessage());
@@ -545,9 +547,9 @@ public class AutomataService {
 	}
 
 	public void printAutomata(Automata automata, String tipoAutomata) {
-		System.out.println("-----------------------");
+		System.out.println(LINEA);
 		System.out.println(tipoAutomata);
-		System.out.println("-----------------------");
+		System.out.println(LINEA);
 
 		String simbolosInput = "";
 

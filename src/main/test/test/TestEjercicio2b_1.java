@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import automata.Automata;
@@ -16,30 +16,28 @@ import exceptions.BadFileException;
 public class TestEjercicio2b_1 {
 	
 	private static final String LINEA = "----------------------------------------";
-	private static final String PROCESAR_TEST = "Procesar Test";
 	private static final String PERTENECE_AL_AFD= " pertenece al AFD? : ";
 
-	AutomataService automataService = new AutomataService();
+	private static AutomataService service = new AutomataService();
 
-	Automata e_afnd = new Automata();
-	Automata afd = new Automata();
-	String fileName = "automata_1.txt";
+	private static Automata e_afnd = new Automata();
+	private static Automata afd = new Automata();
+	private static String fileName = "automata_1.txt";
 
-	@Before
-	public void setup() throws FileNotFoundException, BadFileException {
-		e_afnd = automataService.getAFNDFromTxtFile(fileName);
-		afd = automataService.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
-
+	@BeforeClass
+	public static void setup() throws FileNotFoundException, BadFileException {
+		e_afnd = service.getAFNDFromTxtFile(fileName);
+		afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+		System.out.println(LINEA);
+		System.out.println("TEST 1");
+		System.out.println(LINEA);
+		service.printAutomata(afd, "AFD");
 	}
 	
 	@Test
 	public void testProcesarCadenaAAAAAAAAAA() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
 		String w = "aaaaaaaaaa";
-		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
 		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
@@ -52,10 +50,6 @@ public class TestEjercicio2b_1 {
 		
 		String w = "bb";
 		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
-		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
@@ -66,10 +60,6 @@ public class TestEjercicio2b_1 {
 	public void testProcesarCadenaBBB() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
 		String w = "bbb";
-		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
 		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
@@ -82,10 +72,6 @@ public class TestEjercicio2b_1 {
 		
 		String w = "cccccccc";
 		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
-		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
@@ -97,10 +83,6 @@ public class TestEjercicio2b_1 {
 		
 		String w = "ab";
 		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
-
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
@@ -111,10 +93,6 @@ public class TestEjercicio2b_1 {
 	public void testProcesarCadenaABA() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
 		String w = "aba";
-		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
 		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
@@ -127,10 +105,6 @@ public class TestEjercicio2b_1 {
 		
 		String w = "ababa";
 		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
-		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
@@ -141,10 +115,6 @@ public class TestEjercicio2b_1 {
 	public void testProcesarCadenaABCABC() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
 		String w = "abcabc";
-		
-		System.out.println(LINEA);
-		System.out.println(PROCESAR_TEST);
-		System.out.println(LINEA);
 		
 		boolean resultado = afd.procesar(w);
 		System.out.println(w + PERTENECE_AL_AFD + resultado);
