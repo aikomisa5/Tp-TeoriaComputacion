@@ -162,8 +162,63 @@ public class Gramatica {
 
 
     public void eliminarProduccionesUnitarias() {
-        //TODO:
+
+        Set<Par> pares = new HashSet<>();
+
+        //Creo pares unitarios bases
+        for(Produccion p : getProducciones()) {
+            pares.add(new Par(p.getSimboloInput().charAt(0),
+                                 p.getSimboloInput().charAt(0)));
+        }
+
+        //Búsqueda de más pares unitarios
+
+        pares = buscarParesUnitarios(pares);
+
+
+
+        System.out.println(pares);
+
     }
+
+    private Set<Par> buscarParesUnitarios(Set<Par> pares){
+
+        Set<Par> paresEncontrados = new HashSet<>();
+        for(Par par : pares) {
+            for(Produccion p : filtrarProduccionesUnitarias(getProducciones())) {
+
+                if(par.getDerecho().equals(p.getSimboloInput().charAt(0)))
+                    paresEncontrados.add(new Par(par.getIzquierdo(),p.getSimbolos().get(0)));
+
+            }
+        }
+
+        if(paresEncontrados.isEmpty() || esSubconjunto(paresEncontrados,pares))
+            return pares;
+
+        paresEncontrados.addAll(pares);
+
+        return buscarParesUnitarios(paresEncontrados);
+    }
+
+    private boolean esSubconjunto(Set<Par> paresEncontrados, Set<Par> pares) {
+        return pares.containsAll(paresEncontrados);
+    }
+
+    private List<Produccion> filtrarProduccionesUnitarias(List<Produccion> produccionesTotales){
+
+        List<Produccion> produccionesFiltradas = new ArrayList<>();
+
+        for(int i = 0 ; i < produccionesTotales.size() ; i++) {
+
+            boolean esVariable = Character.isUpperCase(produccionesTotales.get(i).getSimbolos().get(0));
+
+            if (produccionesTotales.get(i).getSimbolos().size() == 1 && esVariable)
+                produccionesFiltradas.add(produccionesTotales.get(i));
+        }
+        return produccionesFiltradas;
+    }
+
 
     public void eliminarSimbolosNoGeneradores() {
         StringBuilder toPattern = new StringBuilder("");
