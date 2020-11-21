@@ -166,9 +166,15 @@ public class Gramatica {
         Set<Par> pares = new HashSet<>();
 
         //Creo pares unitarios bases
+
+        //Lados Izquierdos
         for(Produccion p : getProducciones()) {
             pares.add(new Par(p.getSimboloInput().charAt(0),
                                  p.getSimboloInput().charAt(0)));
+        }
+        //Lados Derechos
+        for(Produccion p : filtrarProduccionesUnitarias(getProducciones())) {
+            pares.add(new Par(p.getSimbolos().get(0),p.getSimbolos().get(0)));
         }
 
         //Búsqueda de más pares unitarios
