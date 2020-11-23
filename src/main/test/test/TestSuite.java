@@ -11,6 +11,10 @@ import org.junit.runners.Suite;
         TestEjercicio2a_4.class,
         TestEjercicio2a_5.class,
         TestEjercicio2b_1.class,
+        TestEjercicio2b_2.class,
+        TestEjercicio2b_3.class,
+        TestEjercicio2b_4.class,
+        TestEjercicio2b_5.class,
         TestEjercicio1a_generadores.class,
         TestEjercicio1a_noAlcanzables.class,})
 class TestSuite {
