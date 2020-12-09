@@ -2,10 +2,8 @@ package test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.io.FileNotFoundException;
 import org.junit.Test;
-
 import exceptions.BadFileException;
 import gramatica.CYK;
 import gramatica.Gramatica;
@@ -15,6 +13,56 @@ public class TestEjercicio1b {
 
     GramaticaService gramaticaService = new GramaticaService();
 
+    @Test(expected = IllegalArgumentException.class)
+	public void stringVacioCYKTest(){
+    	 boolean result = true;
+         Gramatica gramatica = null;
+         try {
+             gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk.txt");
+         }catch (FileNotFoundException e){
+             result = false;
+         }catch (BadFileException e2){
+             result = false;
+         }
+         
+         CYK cyk = new CYK(gramatica);
+         assertTrue(result);
+         cyk.algoritmoCYK("");
+	}
+    
+    @Test(expected = NullPointerException.class)
+	public void stringNullCYKTest(){
+    	 boolean result = true;
+         Gramatica gramatica = null;
+         try {
+             gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk.txt");
+         }catch (FileNotFoundException e){
+             result = false;
+         }catch (BadFileException e2){
+             result = false;
+         }
+         
+         CYK cyk = new CYK(gramatica);
+         assertTrue(result);
+         cyk.algoritmoCYK(null);
+	}
+    
+    @Test
+    public void gramaticaNoFNC_CYKTest(){
+   	 	boolean result = true;
+        Gramatica gramatica = null;
+        try {
+            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_isnotfnctest_1.txt");
+        }catch (FileNotFoundException e){
+            result = false;
+        }catch (BadFileException e2){
+            result = false;
+        }
+        
+        CYK cyk = new CYK(gramatica);
+        assertFalse(result && cyk.algoritmoCYK("ababa"));
+	}
+    
     @Test
     public void CYK1Test(){
 
@@ -140,5 +188,25 @@ public class TestEjercicio1b {
         CYK cyk = new CYK(gramatica);
         assertFalse(result && cyk.algoritmoCYK("dac"));
         assertFalse(result && cyk.algoritmoCYK("a"));
+    }
+    
+    
+    @Test
+    public void stringEnMayuscula_CYKTest(){
+
+        boolean result = true;
+        Gramatica gramatica = null;
+        try {
+            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk2.txt");
+        }catch (FileNotFoundException e){
+            result = false;
+        }catch (BadFileException e2){
+            result = false;
+        }
+
+        CYK cyk = new CYK(gramatica);
+        assertFalse(result && cyk.algoritmoCYK("AA"));
+        assertFalse(result && cyk.algoritmoCYK("BAB"));
+        assertFalse(result && cyk.algoritmoCYK("Baaa"));
     }
 }
