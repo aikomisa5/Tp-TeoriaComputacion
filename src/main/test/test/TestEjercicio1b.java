@@ -50,8 +50,6 @@ public class TestEjercicio1b {
         CYK cyk = new CYK(gramatica);
         assertTrue(result && cyk.algoritmoCYK("abaaa"));
         assertTrue(result && cyk.algoritmoCYK("abaab"));
-        assertTrue(result && cyk.algoritmoCYK("aabb"));
-        //TODO: hacer mas tests
     } 
     
     @Test
@@ -90,6 +88,24 @@ public class TestEjercicio1b {
     } 
     
     @Test
+    public void CYK5Test(){
+
+        boolean result = true;
+        Gramatica gramatica = null;
+        try {
+            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk5.txt");
+        }catch (FileNotFoundException e){
+            result = false;
+        }catch (BadFileException e2){
+            result = false;
+        }
+
+        CYK cyk = new CYK(gramatica);
+        assertTrue(result && cyk.algoritmoCYK("b"));
+        assertFalse(result && cyk.algoritmoCYK("a"));
+    } 
+   
+    @Test
     public void stringNoPerteneceCYK1Test(){
 
         boolean result = true;
@@ -105,5 +121,24 @@ public class TestEjercicio1b {
         CYK cyk = new CYK(gramatica);
         assertFalse(result && cyk.algoritmoCYK("baabac"));
         assertFalse(result && cyk.algoritmoCYK("babbbbaaaaaaas"));
+    }
+    
+    
+    @Test
+    public void stringNoPerteneceCYK2Test(){
+
+        boolean result = true;
+        Gramatica gramatica = null;
+        try {
+            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk2.txt");
+        }catch (FileNotFoundException e){
+            result = false;
+        }catch (BadFileException e2){
+            result = false;
+        }
+
+        CYK cyk = new CYK(gramatica);
+        assertFalse(result && cyk.algoritmoCYK("dac"));
+        assertFalse(result && cyk.algoritmoCYK("a"));
     }
 }
