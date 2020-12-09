@@ -67,9 +67,9 @@ public class CYK {
 					for(Character c : produccion.getSimbolos()) {
 						if(c.equals(palabra.charAt(i)) && esTerminal(c)) {
 							int k = buscarProduccionPorIndice(produccion.getSimboloInput());
-//								P[i][0][k] = true;
-								P[0][i][k] = true;
-//								System.out.println(P[0][i][k] +" " + 0 + " " + i +" "+ k);
+								P[i][0][k] = true;
+//								P[0][i][k] = true;
+								System.out.println(P[i][0][k] + " " + i +" "+ 0 + " "+ k);
 						}
 					}
 				}
@@ -80,8 +80,11 @@ public class CYK {
 ////			For each j = 1 to n-i+1 -- Start of span
 ////				For each k = 1 to i-1 -- Partition of span
 		for(int i = 1 ; i < n ; i++) {  
+//			System.out.println("i:"+ i);
 			for (int j = 0; j < n - i ; j++) {
+//				System.out.println("j:"+ j);
 				for(int k = 0 ; k < i ; k++) {
+//					System.out.println("k:"+ k);
 					for (int p = 0 ; p < r ; p++) {
 						Produccion produccion = gramatica.getProducciones().get(p);
 						if (produccion.getSimbolos().size() == 2) {
@@ -90,15 +93,15 @@ public class CYK {
 							int B = buscarProduccionPorIndice(produccion.getSimbolos().get(0).toString());
 							int C = buscarProduccionPorIndice(produccion.getSimbolos().get(1).toString());
 								
-							if (P[k][j][B] == true && P[i - k - 1][j + k + 1][C] == true) {
-								P[i][j][A] = true;
-//								System.out.println(P[i][j][A] + " "+ i+ " " +j + " " + A);
-							}
-//							if (P[j][k][B] == true && P[j + k + 1][i - k - 1][C] == true) {
-//								P[j][i][A] = true;
-//							System.out.println(P[j][i][A] + " "+ j+ " " +i + " " + A);
-//
+//							if (P[k][j][B] == true && P[i - k - 1][j + k + 1][C] == true) {
+//								P[i][j][A] = true;
+////								System.out.println(P[i][j][A] + " "+ i+ " " +j + " " + A);
 //							}
+							if (P[j][k][B] == true && P[j + k + 1][i - k - 1][C] == true) {
+								P[j][i][A] = true;
+							System.out.println(P[j][i][A] + " "+ j+ " " +i + " " + A);
+
+							}
 						}
 					}
 				}
@@ -106,8 +109,8 @@ public class CYK {
 		}
 //			
 		int s = buscarProduccionPorIndice(gramatica.getEstadoInicial());
-		if (P[n - 1][0][s]) {
-//		if(P[0][n-1][s]) {
+//		if (P[n - 1][0][s]) {
+		if(P[0][n-1][s]) {
 			return true;
 		}
 		return false;	
@@ -132,13 +135,16 @@ public class CYK {
 
 	public static void main(String [] args) throws FileNotFoundException, BadFileException {
 		GramaticaService gramaticaService = new GramaticaService();
-		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk.txt");
+//		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk.txt");
+
+		Gramatica gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_cyk2.txt");
 		
 		CYK cyk = new CYK(gramatica);
+		cyk.parsingCYK("aabb");
 //		System.out.println(cyk.algoritmoCYK("baaba"));
-		cyk.parsingCYK("baaba");
-		cyk.parsingCYK("baaab");
-		cyk.parsingCYK("aabab");
-		cyk.parsingCYK("abac");
+//		cyk.parsingCYK("baaba");
+//		cyk.parsingCYK("baaab");
+//		cyk.parsingCYK("aabab");
+//		cyk.parsingCYK("abac");
 	}	
 }
