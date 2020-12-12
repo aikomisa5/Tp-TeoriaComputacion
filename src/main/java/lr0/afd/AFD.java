@@ -23,5 +23,10 @@ public class AFD {
         this.nodos = nodos;
     }
 
+    // Crea nuevos nodos a partir de los pivotes
+    public void aumentarNodos() {
 
+
+
+    }
 }

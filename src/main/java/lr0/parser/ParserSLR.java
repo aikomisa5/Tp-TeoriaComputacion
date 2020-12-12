@@ -48,16 +48,17 @@ public class ParserSLR {
 
         gramaticaAFD.aumentarGramatica(0,new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA,simbolos));
 
-
         //Construccion realizando la clausura y generando nodos para c/estado.
 
         Gramatica gramaticaAFD_I0 = gramaticaAFD;
-        gramaticaAFD_I0.agregarPivoteATodo();
+
+        //((Produccion) gramaticaAFD_I0.getProducciones().get(0)).cla;
 
         //Agrego nodo estado inicial
         Nodo n0 = new Nodo("0",gramaticaAFD_I0);
         afd.getNodos().add(n0);
 
+        afd.aumentarNodos();
 
 
         return  afd;
