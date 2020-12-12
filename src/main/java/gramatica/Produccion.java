@@ -61,6 +61,11 @@ public class Produccion {
     }
 
     @Override
+    public int hashCode() {
+        return ((this.simboloInput + this.simbolos.toString())).hashCode();
+    }
+
+    @Override
     public String toString() {
         return "Produccion{" +
                 "simboloInput='" + simboloInput + '\'' +

@@ -1,6 +1,9 @@
 package gramatica;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +12,7 @@ public class Gramatica {
     private List<Produccion> producciones;
     private String estadoInicial = "S";
 
-    private static final String terminalPatternString = "[a-z]";
+    private static final String terminalSinEpsilonPatternString = "[a-df-z]";
 
     public Gramatica() {
         super();
@@ -45,10 +48,30 @@ public class Gramatica {
                 '}';
     }
 
+    public boolean isInFNC()
+    {
+        for(Produccion produccion : getProducciones()){
+            if (produccion.getSimbolos().size() == 1){ // Caso en el que podría estar compuesto por un terminal.
+               if (!esSimboloTerminalNoEpsilon(produccion.getSimbolos().get(0)))
+                   return false;
+            }
+            else if (produccion.getSimbolos().size() == 2){ // si son dos simbolos y hay algun terminal, return false.
+                boolean acumulador = false;
+                for (Character simbolo : produccion.getSimbolos())
+                    acumulador = acumulador || esSimboloTerminalNoEpsilon(simbolo);
+                if (acumulador)
+                    return false;
+            }
+            else
+                return false;
+        }
+        return true;
+    }
+
     /*
-    * Función que actualiza las producciones eliminando del lado derecho todas las E.
-    * En caso de que sea solo una producción con una E, elimina la producción.
-    * Crece exponencialmente agregando nuevas producciones.
+     * Función que actualiza las producciones eliminando del lado derecho todas las E.
+     * En caso de que sea solo una producción con una E, elimina la producción.
+     * Crece exponencialmente agregando nuevas producciones.
      */
 
     public void eliminarE() {
@@ -58,7 +81,7 @@ public class Gramatica {
         List<Character> N = new ArrayList<>();
 
         //1º Agrego los simbolos que derivan directamente de vacio
-        for(Produccion p : getProducciones()) {
+        for (Produccion p : getProducciones()) {
             boolean isNullable = false;
 
             for (Character c : p.getSimbolos()) {
@@ -70,7 +93,7 @@ public class Gramatica {
                 N.add(p.getSimboloInput().charAt(0));
         }
         //2º Verifico si existe alguna produccion que esté completamente en N
-        for(Produccion p : getProducciones()) {
+        for (Produccion p : getProducciones()) {
             boolean isNullable = true;
 
             for (Character c : p.getSimbolos()) {
@@ -83,9 +106,9 @@ public class Gramatica {
         }
 
         //3º Genero nueva gramática, analizando la anterior y agregando producciones nuevas para los casos nullables.
-        for(Produccion p : getProducciones()) {
+        for (Produccion p : getProducciones()) {
 
-            List<String> nullables = filtroNullables(p.getSimbolos(),N);
+            List<String> nullables = filtroNullables(p.getSimbolos(), N);
 
             List<String> combinacionesNullables = obtenerCombinacionesNullables(nullables);
 
@@ -95,7 +118,7 @@ public class Gramatica {
                 ArrayList<Character> newSimbolos = new ArrayList<>();
                 String terminales = "";
                 for (Character c : p.getSimbolos()) {
-                    if (!Character.isUpperCase(c)){
+                    if (!Character.isUpperCase(c)) {
                         newSimbolos.add(c); //Es terminal, lo agrego.
                         terminales = terminales + c.toString();
                     }
@@ -104,13 +127,13 @@ public class Gramatica {
                         newSimbolos.add(c);
                 }
                 //Caso particular para dejar sólo los terminales
-                if(!terminales.isEmpty()) {
+                if (!terminales.isEmpty()) {
                     List<Character> terminalesSimbolos = getCharacters(terminales.toCharArray());
                     Produccion newP = new Produccion(p.getSimboloInput(), terminalesSimbolos);
                     newProducciones.add(newP);
                 }
                 //Caso particular para produccion vacía
-                if(!newSimbolos.isEmpty()) {
+                if (!newSimbolos.isEmpty()) {
                     Produccion newP = new Produccion(p.getSimboloInput(), newSimbolos);
                     newProducciones.add(newP);
                 }
@@ -123,7 +146,7 @@ public class Gramatica {
     private List<Character> getCharacters(char[] toCharArray) {
         ArrayList<Character> resultList = new ArrayList<>();
 
-        for (int i = 0 ; i < toCharArray.length; i++){
+        for (int i = 0; i < toCharArray.length; i++) {
             resultList.add(Character.valueOf(toCharArray[i]));
 
         }
@@ -157,21 +180,114 @@ public class Gramatica {
             if (n.contains(c))
                 result.add(c.toString());
 
-        return  result;
+        return result;
     }
 
 
     public void eliminarProduccionesUnitarias() {
-        //TODO:
+
+        Set<Par> pares = new HashSet<>();
+
+        //Creo pares unitarios bases
+
+        //Lados Izquierdos
+        for (Produccion p : getProducciones()) {
+            pares.add(new Par(p.getSimboloInput().charAt(0),
+                    p.getSimboloInput().charAt(0)));
+        }
+        //Lados Derechos
+        for (Produccion p : filtrarProduccionesUnitarias()) {
+            pares.add(new Par(p.getSimbolos().get(0), p.getSimbolos().get(0)));
+        }
+
+        //Búsqueda de más pares unitarios
+        pares = buscarParesUnitarios(pares);
+
+
+        //Construcción de nueva gramática con los pares unitarios encontrados
+        List<Produccion> newProducciones = new ArrayList<>();
+        for (Produccion p : filtrarProduccionesInteresantes()) {
+            for (Par par : pares) {
+                Character c = p.getSimboloInput().charAt(0);
+                if (c.equals(par.getDerecho()))
+                    newProducciones.add(new Produccion(par.getIzquierdo().toString(),p.getSimbolos())); //sumos las nuevas
+            }
+        }
+
+        //Elimino repetidos
+        Set<Produccion> conjuntoProducciones = new HashSet<>();
+        conjuntoProducciones.addAll(newProducciones);
+        conjuntoProducciones.addAll(filtrarProduccionesInteresantes());// sumo además las interesantes ya existentes en la gramática
+
+        List<Produccion> newProduccionesSinRepetidos = new ArrayList<>(conjuntoProducciones);
+
+        setProducciones(newProduccionesSinRepetidos);
+
     }
+
+    private Set<Par> buscarParesUnitarios(Set<Par> pares) {
+
+        Set<Par> paresEncontrados = new HashSet<>();
+        for (Par par : pares) {
+            for (Produccion p : filtrarProduccionesUnitarias()) {
+
+                if (par.getDerecho().equals(p.getSimboloInput().charAt(0)))
+                    paresEncontrados.add(new Par(par.getIzquierdo(), p.getSimbolos().get(0)));
+
+            }
+        }
+
+        if (paresEncontrados.isEmpty() || esSubconjunto(paresEncontrados, pares))
+            return pares;
+
+        paresEncontrados.addAll(pares);
+
+        return buscarParesUnitarios(paresEncontrados);
+
+    }
+
+    private boolean esSubconjunto(Set<Par> paresEncontrados, Set<Par> pares) {
+        return pares.containsAll(paresEncontrados);
+    }
+
+    private List<Produccion> filtrarProduccionesUnitarias() {
+
+        List<Produccion> produccionesFiltradas = new ArrayList<>();
+
+        for (int i = 0; i < getProducciones().size(); i++) {
+
+            boolean esVariable = Character.isUpperCase(getProducciones().get(i).getSimbolos().get(0));
+
+            if (getProducciones().get(i).getSimbolos().size() == 1 && esVariable)
+                produccionesFiltradas.add(getProducciones().get(i));
+        }
+        return produccionesFiltradas;
+    }
+
+    private List<Produccion> filtrarProduccionesInteresantes() {
+
+        List<Produccion> produccionesFiltradas = new ArrayList<>();
+
+        for (int i = 0; i < getProducciones().size(); i++) {
+
+            boolean esVariable = Character.isUpperCase(getProducciones().get(i).getSimbolos().get(0));
+
+            if (getProducciones().get(i).getSimbolos().size() > 1 || !esVariable)
+                produccionesFiltradas.add(getProducciones().get(i));
+        }
+        return produccionesFiltradas;
+    }
+
 
     public void eliminarSimbolosNoGeneradores() {
         StringBuilder toPattern = new StringBuilder("");
-        for(Produccion produccion : getProducciones()){
+        for (Produccion produccion : getProducciones()) {
             // identifico los simbolos terminales en mi caso base.
             boolean derivaTodosTerminales = true;
+
             for (Character simbolo : produccion.getSimbolos()){
-                boolean esTerminal = esSimboloTerminal(simbolo);
+                boolean esTerminal = esSimboloTerminalNoEpsilon(simbolo);
+
                 derivaTodosTerminales = derivaTodosTerminales && esTerminal;
                 if (esTerminal)
                     toPattern.append(simbolo);
@@ -180,15 +296,15 @@ public class Gramatica {
                 // hago esto porque por algun motivo el simbolo input no es un char.
                 toPattern.append(produccion.getSimboloInput().charAt(0));
         }
-        Pattern pattern1 = Pattern.compile("["+toPattern.toString()+"]+");
+        Pattern pattern1 = Pattern.compile("[" + toPattern.toString() + "]+");
 
         for (int i = 0; i < toPattern.toString().length(); i++) {
-            for(Produccion produccion : getProducciones()) {
+            for (Produccion produccion : getProducciones()) {
                 String produccionEnString = "";
-                for (Character simboloProduccion :produccion.getSimbolos())
+                for (Character simboloProduccion : produccion.getSimbolos())
                     produccionEnString = produccionEnString.concat("" + simboloProduccion);
                 Matcher matcher = pattern1.matcher(produccionEnString);
-                if (matcher.matches()){
+                if (matcher.matches()) {
                     if (!toPattern.toString().contains(produccion.getSimboloInput()))
                         toPattern.append(produccion.getSimboloInput().charAt(0));
                 }
@@ -196,10 +312,10 @@ public class Gramatica {
         }
         List<Produccion> produccionesDeSimbolosGeneradores = new ArrayList<>();
         boolean estadoInicialEstaContenido = false;
-        for(Produccion produccion : getProducciones()){
+        for (Produccion produccion : getProducciones()) {
             boolean hayUnSimboloInutil = false;
             for (Character simbolo : produccion.getSimbolos())
-                hayUnSimboloInutil = hayUnSimboloInutil || !toPattern.toString().contains(""+simbolo);
+                hayUnSimboloInutil = hayUnSimboloInutil || !toPattern.toString().contains("" + simbolo);
             if (toPattern.toString().contains(produccion.getSimboloInput()) && !hayUnSimboloInutil) {
                 if (produccion.getSimboloInput().equals(estadoInicial))
                     estadoInicialEstaContenido = true;
@@ -211,36 +327,37 @@ public class Gramatica {
         setProducciones(estadoInicialEstaContenido ? produccionesDeSimbolosGeneradores : new ArrayList<>());
     }
 
-    private boolean esSimboloTerminal(Character simbolo)
+    private boolean esSimboloTerminalNoEpsilon(Character simbolo)
     {
-        Pattern pattern = Pattern.compile(terminalPatternString);
+        Pattern pattern = Pattern.compile(terminalSinEpsilonPatternString);
         Matcher matcher = pattern.matcher(""+simbolo);
+
         return matcher.matches();
     }
 
     public void eliminarSimbolosNoAlcanzables() {
         StringBuilder alcanzables = new StringBuilder(estadoInicial);
-        Pattern pattern1 = Pattern.compile("["+alcanzables.toString()+"]+");
+        Pattern pattern1 = Pattern.compile("[" + alcanzables.toString() + "]+");
 
         for (int i = 0; i < alcanzables.toString().length(); i++) {
-            for(Produccion produccion : getProducciones()) {
+            for (Produccion produccion : getProducciones()) {
                 Matcher matcher = pattern1.matcher(produccion.getSimboloInput());
-                if (matcher.matches()){
-                    for (Character simbolo : produccion.getSimbolos()){
-                        if (!alcanzables.toString().contains(""+simbolo)){
+                if (matcher.matches()) {
+                    for (Character simbolo : produccion.getSimbolos()) {
+                        if (!alcanzables.toString().contains("" + simbolo)) {
                             alcanzables.append(simbolo);
-                            pattern1 = Pattern.compile("["+alcanzables.toString()+"]+");
+                            pattern1 = Pattern.compile("[" + alcanzables.toString() + "]+");
                         }
                     }
                 }
             }
         }
         List<Produccion> produccionesDeSimbolosNoAlcanzables = new ArrayList<>();
-        for(Produccion produccion : getProducciones()) {
+        for (Produccion produccion : getProducciones()) {
             boolean hayUnSimboloInutil = false;
             if (alcanzables.toString().contains(produccion.getSimboloInput())) {
                 for (Character simbolo : produccion.getSimbolos()) {
-                    hayUnSimboloInutil = hayUnSimboloInutil || !alcanzables.toString().contains(""+simbolo);
+                    hayUnSimboloInutil = hayUnSimboloInutil || !alcanzables.toString().contains("" + simbolo);
                 }
                 if (!hayUnSimboloInutil)
                     produccionesDeSimbolosNoAlcanzables.add(produccion);
