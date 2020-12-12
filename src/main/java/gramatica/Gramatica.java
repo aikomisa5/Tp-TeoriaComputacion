@@ -12,7 +12,7 @@ public class Gramatica {
     private List<Produccion> producciones;
     private String estadoInicial = "S";
 
-    private static final String terminalPatternString = "[a-z]";
+    private static final String terminalSinEpsilonPatternString = "[a-df-z]";
 
     public Gramatica() {
         super();
@@ -46,6 +46,26 @@ public class Gramatica {
                 "producciones=" + producciones +
                 ", estadoInicial='" + estadoInicial + '\'' +
                 '}';
+    }
+
+    public boolean isInFNC()
+    {
+        for(Produccion produccion : getProducciones()){
+            if (produccion.getSimbolos().size() == 1){ // Caso en el que podría estar compuesto por un terminal.
+               if (!esSimboloTerminalNoEpsilon(produccion.getSimbolos().get(0)))
+                   return false;
+            }
+            else if (produccion.getSimbolos().size() == 2){ // si son dos simbolos y hay algun terminal, return false.
+                boolean acumulador = false;
+                for (Character simbolo : produccion.getSimbolos())
+                    acumulador = acumulador || esSimboloTerminalNoEpsilon(simbolo);
+                if (acumulador)
+                    return false;
+            }
+            else
+                return false;
+        }
+        return true;
     }
 
     /*
@@ -264,8 +284,10 @@ public class Gramatica {
         for (Produccion produccion : getProducciones()) {
             // identifico los simbolos terminales en mi caso base.
             boolean derivaTodosTerminales = true;
-            for (Character simbolo : produccion.getSimbolos()) {
-                boolean esTerminal = esSimboloTerminal(simbolo);
+
+            for (Character simbolo : produccion.getSimbolos()){
+                boolean esTerminal = esSimboloTerminalNoEpsilon(simbolo);
+
                 derivaTodosTerminales = derivaTodosTerminales && esTerminal;
                 if (esTerminal)
                     toPattern.append(simbolo);
@@ -305,9 +327,11 @@ public class Gramatica {
         setProducciones(estadoInicialEstaContenido ? produccionesDeSimbolosGeneradores : new ArrayList<>());
     }
 
-    private boolean esSimboloTerminal(Character simbolo) {
-        Pattern pattern = Pattern.compile(terminalPatternString);
-        Matcher matcher = pattern.matcher("" + simbolo);
+    private boolean esSimboloTerminalNoEpsilon(Character simbolo)
+    {
+        Pattern pattern = Pattern.compile(terminalSinEpsilonPatternString);
+        Matcher matcher = pattern.matcher(""+simbolo);
+
         return matcher.matches();
     }
 
