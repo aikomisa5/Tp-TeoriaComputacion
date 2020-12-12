@@ -27,12 +27,10 @@ public class Gramatica {
     }
 
 
-    public void aumentarGramatica(){
-
-        System.out.println();
-
-
-
+    public void aumentarGramatica(int index,Produccion p){
+        this.getProducciones().add(index,p);
     }
+
+
 
 }

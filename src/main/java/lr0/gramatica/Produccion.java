@@ -12,6 +12,11 @@ public class Produccion {
         this.body = new ArrayList<>();
     }
 
+    public Produccion(String variable, List<String> body) {
+        this.variable = variable;
+        this.body = body;
+    }
+
     public String getVariable() {
         return variable;
     }

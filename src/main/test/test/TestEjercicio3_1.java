@@ -3,17 +3,19 @@ package test;
 
 import exceptions.BadFileException;
 import lr0.gramatica.Gramatica;
-import lr0.gramatica.ParserLR0Service;
+import lr0.gramatica.GramaticaLR0Service;
+import lr0.gramatica.Produccion;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class TestEjercicio3_1 {
 
-    ParserLR0Service parserLR0Service = new ParserLR0Service();
+    GramaticaLR0Service parserLR0Service = new GramaticaLR0Service();
 
     @Test
     public void testGramatica_0_NOMatchea() throws FileNotFoundException, BadFileException {
@@ -48,7 +50,9 @@ public class TestEjercicio3_1 {
 
         Gramatica gramatica = parserLR0Service.getGramaticaFromTxtFile("lr0_1.txt");
 
-        gramatica.aumentarGramatica();
+        ArrayList<String> simbolos = new ArrayList<>();
+        simbolos.add(Gramatica.SIGNO_DISTINGUIDO);
+        gramatica.aumentarGramatica(0,new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA,simbolos));
 
 
         assertTrue(result);
