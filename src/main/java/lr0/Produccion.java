@@ -6,7 +6,7 @@ import java.util.List;
 public class Produccion {
 
     private String variable;
-    private List<Simbolo> body;
+    private List<String> body;
 
     public Produccion() {
         this.body = new ArrayList<>();
@@ -20,11 +20,11 @@ public class Produccion {
         this.variable = variable;
     }
 
-    public List<Simbolo> getBody() {
+    public List<String> getBody() {
         return body;
     }
 
-    public void setBody(List<Simbolo> body) {
+    public void setBody(List<String> body) {
         this.body = body;
     }
 }

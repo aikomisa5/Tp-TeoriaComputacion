@@ -1,8 +1,6 @@
 package lr0;
 
 import exceptions.BadFileException;
-import lr0.Gramatica;
-import lr0.Produccion;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,8 +14,7 @@ public class ParserLR0Service {
 
     private static final String patternString = "X_\\{[0-9]+\\}\\s+->\\s+(([a-z]*X_\\{[0-9]+\\}[a-z]*))+";
     private static final String formatoGramatica = "<variable> -> <body>. Ej: X_{4} -> X_{34}aX_{1}bcd";
-    private static final String ESTADO_INICIAL = "X_{1}";
-    private static final String ESTADO_INICIAL_PRIMA = "X_{0}";
+
 
     /**
      * Metodos publicos
@@ -67,23 +64,23 @@ public class ParserLR0Service {
 
                 Produccion produccion = new Produccion();
 
-                /***Ejemplo: X_{4} -> X_{34}aX_{1}bcd***/
+                /***Ejemplo: X_{4} -> X_{34}aX_{1}bcd  or  <variable>  -> <body>  </></variable>***/
 
                 String[] parts = data.split("->");
 
-                if(parts[0].contains(ESTADO_INICIAL))
+                if (parts[0].contains(Gramatica.SIGNO_DISTINGUIDO))
                     cantEstadoInicial += 1;
 
                 produccion.setVariable(parts[0].trim());
-                String simbolos = parts[1].trim();
-                List<Simbolo> simbolosList = agregarSimbolos(simbolos,produccion);
 
-               /* produccion.setSimbolos(simbolosList);
+                String simbolos = parts[1].trim();
+                List<String> simbolosList = agregarSimbolos(simbolos, produccion);
+
+                produccion.setBody(simbolosList);
 
                 producciones.add(produccion);
 
-                response.setEstadoInicial(ESTADO_INICIAL);
-                response.setProducciones(producciones);*/
+                response.setProducciones(producciones);
 
             }
 
@@ -92,15 +89,6 @@ public class ParserLR0Service {
                 System.out.println(msj);
                 throw new BadFileException(msj);
             }
-
-          /* Este checkeo lo comentamos hasta consultar con ivo la duda de la tarjeta
-           * https://trello.com/c/3kRRqbuQ
-          if (cantEstadoInicial > 1) {
-                String msj = "Ocurrio un error, la gramática tiene más de un estado inicial S.";
-                System.out.println(msj);
-                throw new BadFileException(msj);
-            }
-            */
 
 
         } catch (FileNotFoundException e) {
@@ -116,18 +104,27 @@ public class ParserLR0Service {
         return response;
     }
 
-    private List<Simbolo> agregarSimbolos(String simbolos, Produccion produccion) {
+    private List<String> agregarSimbolos(String simbolos, Produccion produccion) {
 
-        List<Simbolo> result = produccion.getBody();
+        List<String> result = produccion.getBody();
 
-        String patternVariable = "X_\\{[0-9]+\\}";
-        String[] split = simbolos.split(patternVariable);
+        while (!simbolos.isEmpty()) {
+            char charLowerCase = String.valueOf(simbolos.charAt(0)).toLowerCase().charAt(0);
 
-       /* for (int i = 0; i < simbolos.length(); i++) {
-            simbolosList.add();
-        }*/
-        return null;
+            if (simbolos.charAt(0) == charLowerCase) { //Si es terminal
+                result.add(String.valueOf(simbolos.charAt(0)));
+                simbolos = simbolos.substring(1);
+            } else { //Si es variable
 
+                String variable = simbolos.substring(simbolos.indexOf("X"), simbolos.indexOf("}")+1);
+
+                simbolos = simbolos.substring(simbolos.indexOf("}")+1);
+
+                result.add(variable);
+            }
+        }
+
+        return result;
     }
 
 
