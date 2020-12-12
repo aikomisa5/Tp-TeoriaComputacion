@@ -1,4 +1,4 @@
-package lr0;
+package lr0.gramatica;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,13 @@
-package lr0;
+package lr0.gramatica;
 
 import java.util.List;
 
 public class Gramatica {
 
 
-    public final static String SIGNO_DISTINGUIDO = "X_{1}";
+    public static final  String SIGNO_DISTINGUIDO = "X_{1}";
     public static final String SIGNO_DISTINGUIDO_PRIMA = "X_{0}";
+    public static final String PIVOTE = "*";
 
     private List<Produccion> producciones;
 
@@ -24,4 +25,14 @@ public class Gramatica {
     public void setProducciones(List<Produccion> producciones) {
         this.producciones = producciones;
     }
+
+
+    public void aumentarGramatica(){
+
+        System.out.println();
+
+
+
+    }
+
 }

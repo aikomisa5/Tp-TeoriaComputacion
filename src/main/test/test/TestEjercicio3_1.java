@@ -2,7 +2,8 @@
 package test;
 
 import exceptions.BadFileException;
-import lr0.ParserLR0Service;
+import lr0.gramatica.Gramatica;
+import lr0.gramatica.ParserLR0Service;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -45,13 +46,10 @@ public class TestEjercicio3_1 {
 
         boolean result = true;
 
-        try {
-            parserLR0Service.getGramaticaFromTxtFile("lr0_1.txt");
-        } catch (FileNotFoundException e) {
-            result = false;
-        } catch (BadFileException e2) {
-            result = false;
-        }
+        Gramatica gramatica = parserLR0Service.getGramaticaFromTxtFile("lr0_1.txt");
+
+        gramatica.aumentarGramatica();
+
 
         assertTrue(result);
     }

@@ -1,4 +1,4 @@
-package lr0;
+package lr0.gramatica;
 
 import exceptions.BadFileException;
 
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ParserLR0Service {
 
-    private static final String patternString = "X_\\{[0-9]+\\}\\s+->\\s+(([a-z]*X_\\{[0-9]+\\}[a-z]*))+";
+    private static final String patternString = "X_\\{[0-9]+\\}\\s+->\\s+(([a-z]*(X_\\{[0-9]+\\})*[a-z]*))+";
     private static final String formatoGramatica = "<variable> -> <body>. Ej: X_{4} -> X_{34}aX_{1}bcd";
 
 
