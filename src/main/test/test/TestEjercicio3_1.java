@@ -5,6 +5,7 @@ import exceptions.BadFileException;
 import lr0.gramatica.Gramatica;
 import lr0.gramatica.GramaticaLR0Service;
 import lr0.gramatica.Produccion;
+import lr0.parser.ParserSLR;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -40,10 +41,10 @@ public class TestEjercicio3_1 {
 
 
     @Test
-    public void testGramatica_0_Matchea() throws FileNotFoundException, BadFileException {
+    public void testGramatica_0_AumentarGramatica() throws FileNotFoundException, BadFileException {
 
         System.out.println("--------------------------");
-        System.out.println("testLR_0_Matchea");
+        System.out.println("testGramatica_0_AumentarGramatica");
         System.out.println("--------------------------");
 
         boolean result = true;
@@ -53,6 +54,26 @@ public class TestEjercicio3_1 {
         ArrayList<String> simbolos = new ArrayList<>();
         simbolos.add(Gramatica.SIGNO_DISTINGUIDO);
         gramatica.aumentarGramatica(0,new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA,simbolos));
+
+
+        assertTrue(result);
+    }
+
+
+    @Test
+    public void testGramatica_0_ConstruccionAFD() throws FileNotFoundException, BadFileException {
+
+        System.out.println("--------------------------");
+        System.out.println("testGramatica_0_ConstruccionAFD");
+        System.out.println("--------------------------");
+
+        boolean result = true;
+
+        Gramatica gramatica = parserLR0Service.getGramaticaFromTxtFile("lr0_1.txt");
+
+        ParserSLR parserSLR = new ParserSLR(gramatica);
+
+        parserSLR.construirAFD();
 
 
         assertTrue(result);

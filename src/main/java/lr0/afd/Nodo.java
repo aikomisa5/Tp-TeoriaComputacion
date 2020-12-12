@@ -1,16 +1,30 @@
 package lr0.afd;
 
-import lr0.gramatica.Produccion;
+import lr0.gramatica.Gramatica;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Nodo {
 
     private String nombreEstado;
-    private List<Produccion> producciones;
+    private Gramatica gramatica;
     private List<Trancision> transiciones;
     private boolean esFinal;
 
+    public Nodo(String nombreEstado, Gramatica gramatica) {
+        this.nombreEstado = nombreEstado;
+        this.gramatica = gramatica;
+        this.transiciones = new ArrayList<>();
+        this.esFinal = false;
+    }
+
+    public Nodo(String nombreEstado, Gramatica gramatica, List<Trancision> transiciones, boolean esFinal) {
+        this.nombreEstado = nombreEstado;
+        this.gramatica = gramatica;
+        this.transiciones = transiciones;
+        this.esFinal = esFinal;
+    }
 
     public String getNombreEstado() {
         return nombreEstado;
@@ -20,12 +34,12 @@ public class Nodo {
         this.nombreEstado = nombreEstado;
     }
 
-    public List<Produccion> getProducciones() {
-        return producciones;
+    public Gramatica getGramatica() {
+        return gramatica;
     }
 
-    public void setProducciones(List<Produccion> producciones) {
-        this.producciones = producciones;
+    public void setGramatica(Gramatica gramatica) {
+        this.gramatica = gramatica;
     }
 
     public List<Trancision> getTransiciones() {
@@ -34,5 +48,13 @@ public class Nodo {
 
     public void setTransiciones(List<Trancision> transiciones) {
         this.transiciones = transiciones;
+    }
+
+    public boolean isEsFinal() {
+        return esFinal;
+    }
+
+    public void setEsFinal(boolean esFinal) {
+        this.esFinal = esFinal;
     }
 }
