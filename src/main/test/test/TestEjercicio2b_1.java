@@ -5,130 +5,120 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import automata.Automata;
 import automata.AutomataService;
+import exceptions.BadAutomataException;
 import exceptions.BadFileException;
 
 public class TestEjercicio2b_1 {
 	
-	AutomataService automataService = new AutomataService();
+	private static final String LINEA = "----------------------------------------";
+	private static final String PERTENECE_AL_AFD= " pertenece al AFD? : ";
 
-	Automata e_afnd = new Automata();
-	Automata afd = new Automata();
-	String nombreAutomata = "automata.txt";
+	private static AutomataService service = new AutomataService();
 
-	@Before
-	public void setup() throws FileNotFoundException, BadFileException {
-		//TODO la idea para mi seria usar esto.. el tema es que como esta definido el metodo procesar (por el profe) no se puede usarlo..
-		e_afnd = automataService.getAutomataFromTxtFile(nombreAutomata);
-		afd = automataService.getAFD(e_afnd.getProyecciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+	private static Automata e_afnd = new Automata();
+	private static Automata afd = new Automata();
+	private static String fileName = "automata_1.txt";
 
+	@BeforeClass
+	public static void setup() throws FileNotFoundException, BadFileException {
+		e_afnd = service.getAFNDFromTxtFile(fileName);
+		afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
+		System.out.println(LINEA);
+		System.out.println("TEST 1");
+		System.out.println(LINEA);
+		service.printAutomata(afd, "AFD");
 	}
 	
 	@Test
-	public void testProcesarCadenaA() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaAAAAAAAAAA() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "aaaaaaaaaa";
 		
-		boolean aaaaaaaaaa = automataService.procesar("aaaaaaaaaa",nombreAutomata);
-		System.out.println("aaaaaaaaaa pertenece? : " + aaaaaaaaaa);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 
-		assertTrue(aaaaaaaaaa);
+		assertTrue(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaC() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaBB() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "bb";
 		
-		boolean cccccccc = automataService.procesar("cccccccc",nombreAutomata);
-		System.out.println("cccccccc pertenece? : " + cccccccc);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
-		assertTrue(cccccccc);
+		assertTrue(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaABA() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaBBB() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "bbb";
 		
-		boolean aba = automataService.procesar("aba",nombreAutomata);
-		System.out.println("aba pertenece? : " + aba);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
-		assertTrue(aba);
+		assertFalse(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaABABA() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaCCCCCCCC() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "cccccccc";
 		
-		boolean ababa = automataService.procesar("ababa",nombreAutomata);
-		System.out.println("ababa pertenece? : " + ababa);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
-		assertTrue(ababa);
+		assertTrue(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaABCABC() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaAB() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "ab";
 		
-		boolean abcabc = automataService.procesar("abcabc",nombreAutomata);
-		System.out.println("abcabc pertenece? : " + abcabc);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
-		assertTrue(abcabc);
+		assertTrue(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaBB() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaABA() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "aba";
 		
-		boolean bb = automataService.procesar("bb",nombreAutomata);
-		System.out.println("bb pertenece? : " + bb);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
-		assertTrue(bb);
+		assertTrue(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaBBB() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaABABA() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
+		String w = "ababa";
 		
-		boolean bbb = automataService.procesar("bbb",nombreAutomata);
-		System.out.println("bbb pertenece? : " + bbb);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
 		
-		assertFalse(bbb);
+		assertTrue(resultado);
 	}
 	
 	@Test
-	public void testProcesarCadenaAB() throws FileNotFoundException, BadFileException {
+	public void testProcesarCadenaABCABC() throws FileNotFoundException, BadFileException, BadAutomataException {
 		
-		System.out.println("--------------------");
-		System.out.println("Procesado de Strings");
-		System.out.println("--------------------");
-
-		boolean ab = automataService.procesar("ab",nombreAutomata);
-		System.out.println("ab pertenece? : " + ab);
+		String w = "abcabc";
 		
-		assertTrue(ab);
+		boolean resultado = afd.procesar(w);
+		System.out.println(w + PERTENECE_AL_AFD + resultado);
+		
+		assertTrue(resultado);
 	}
 }
