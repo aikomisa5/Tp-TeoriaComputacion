@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TestEjercicio1a_1 {
+public class TestEjercicio1a_3 {
 	
 	GramaticaService gramaticaService = new GramaticaService();
 
