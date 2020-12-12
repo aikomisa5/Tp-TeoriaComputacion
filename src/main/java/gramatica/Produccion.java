@@ -8,8 +8,6 @@ public class Produccion {
     private String simboloInput;
     private List<Character> simbolos;
 
-
-
     public Produccion() {
         super();
         simboloInput = "S";
@@ -65,11 +63,8 @@ public class Produccion {
         return ((this.simboloInput + this.simbolos.toString())).hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "Produccion{" +
-                "simboloInput='" + simboloInput + '\'' +
-                ", simbolos=" + simbolos +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Produccion [simboloInput=" + simboloInput + ", simbolos=" + simbolos + "]";
+	}
 }

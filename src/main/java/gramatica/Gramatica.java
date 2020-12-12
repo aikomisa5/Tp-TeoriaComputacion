@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class Gramatica {
 
     private List<Produccion> producciones;
-    private String estadoInicial = "S";
+    private String simboloInicial = "S";
 
     private static final String terminalSinEpsilonPatternString = "[a-df-z]";
 
@@ -33,21 +33,21 @@ public class Gramatica {
     }
 
     public String getEstadoInicial() {
-        return estadoInicial;
+        return simboloInicial;
     }
 
     public void setEstadoInicial(String estadoInicial) {
-        this.estadoInicial = estadoInicial;
+        this.simboloInicial = estadoInicial;
     }
 
     @Override
     public String toString() {
         return "Gramatica{" +
                 "producciones=" + producciones +
-                ", estadoInicial='" + estadoInicial + '\'' +
+                ", simboloInicial='" + simboloInicial + '\'' +
                 '}';
     }
-
+    
     public boolean isInFNC()
     {
         for(Produccion produccion : getProducciones()){
@@ -317,7 +317,7 @@ public class Gramatica {
             for (Character simbolo : produccion.getSimbolos())
                 hayUnSimboloInutil = hayUnSimboloInutil || !toPattern.toString().contains("" + simbolo);
             if (toPattern.toString().contains(produccion.getSimboloInput()) && !hayUnSimboloInutil) {
-                if (produccion.getSimboloInput().equals(estadoInicial))
+                if (produccion.getSimboloInput().equals(simboloInicial))
                     estadoInicialEstaContenido = true;
                 produccionesDeSimbolosGeneradores.add(produccion);
             }
@@ -327,8 +327,7 @@ public class Gramatica {
         setProducciones(estadoInicialEstaContenido ? produccionesDeSimbolosGeneradores : new ArrayList<>());
     }
 
-    private boolean esSimboloTerminalNoEpsilon(Character simbolo)
-    {
+    public boolean esSimboloTerminalNoEpsilon(Character simbolo){
         Pattern pattern = Pattern.compile(terminalSinEpsilonPatternString);
         Matcher matcher = pattern.matcher(""+simbolo);
 
@@ -336,7 +335,7 @@ public class Gramatica {
     }
 
     public void eliminarSimbolosNoAlcanzables() {
-        StringBuilder alcanzables = new StringBuilder(estadoInicial);
+        StringBuilder alcanzables = new StringBuilder(simboloInicial);
         Pattern pattern1 = Pattern.compile("[" + alcanzables.toString() + "]+");
 
         for (int i = 0; i < alcanzables.toString().length(); i++) {
@@ -365,4 +364,14 @@ public class Gramatica {
         }
         setProducciones(produccionesDeSimbolosNoAlcanzables);
     }
+    
+	public int buscarIndiceProduccion(String simbolo) {
+		int indice = -1;
+		for(int i = 0 ; i < getProducciones().size() ; i++) {
+			if(getProducciones().get(i).getSimboloInput().equals(simbolo)) {
+				indice = i;
+			}
+		}
+		return indice;
+	}
 }

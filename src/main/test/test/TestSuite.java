@@ -5,7 +5,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({TestEjercicio1a_1.class,
-		TestEjercicio1b.class,
+		TestEjercicio1b_1.class,
+		TestEjercicio1b_2.class,
+		TestEjercicio1b_3.class,
+		TestEjercicio1b_4.class,
+		TestEjercicio1b_5.class,
         TestEjercicio2a_1.class,
         TestEjercicio2a_2.class,
         TestEjercicio2a_3.class,
@@ -18,6 +22,7 @@ import org.junit.runners.Suite;
         TestEjercicio2b_5.class,
         TestEjercicio1a_generadores.class,
         TestEjercicio1a_noAlcanzables.class,
+        TestEjercicio1a_sinSimbolosInutiles.class,
         TestEjercicio1a_isFNC.class})
 class TestSuite {
 	
