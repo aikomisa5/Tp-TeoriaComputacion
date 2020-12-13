@@ -42,14 +42,17 @@ public class Gramatica {
         for(int i = 0 ; i < producciones.size() ; i++){
             if(producciones.get(i).getVariable().equals(variable)) {
                 Produccion p = new Produccion(producciones.get(i).getVariable(),producciones.get(i).getBody());
-
-                for(int j = 0 ; j < p.getBody().size() ; j++) {
-                    String newPrimerSimbolo = Gramatica.PIVOTE + p.getBody().get(j);
-                    p.getBody().remove(j);
-                    p.getBody().add(j, newPrimerSimbolo);
+                if (p.getBody().get(0).charAt(0) != Gramatica.PIVOTE.charAt(0)){
+                    String newPrimerSimbolo = Gramatica.PIVOTE + p.getBody().get(0);
+                    p.getBody().remove(0);
+                    p.getBody().add(0, newPrimerSimbolo);
 
                     result.add(p);
                 }
+
+                /*for(int j = 0 ; j < p.getBody().size() ; j++) {
+
+                }*/
             }
         }
 
