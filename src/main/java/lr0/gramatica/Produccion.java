@@ -59,10 +59,13 @@ public class Produccion {
 
     @Override
     public String toString() {
-        return "Produccion{" +
-                "variable='" + getVariable() + '\'' +
-                ", body=" + getBody() +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(getVariable());
+        stringBuilder.append("->");
+        for (String str : getBody()) {
+            stringBuilder.append(str);
+        }
+        return stringBuilder.toString();
     }
 
 }

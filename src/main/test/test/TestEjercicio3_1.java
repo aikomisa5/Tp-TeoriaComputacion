@@ -77,7 +77,7 @@ public class TestEjercicio3_1 {
 
         ParserSLR parserSLR = new ParserSLR(gramatica);
 
-        parserSLR.construirAFD();
+        parserSLR.generarParserLR0();
 
 
         assertTrue(result);

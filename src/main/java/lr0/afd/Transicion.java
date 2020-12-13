@@ -1,15 +1,15 @@
 package lr0.afd;
 
-public class Trancision {
+public class Transicion {
 
-    private char simbolo;
+    private String simbolo;
     private Nodo nodoDestino;
 
-    public char getSimbolo() {
+    public String getSimbolo() {
         return simbolo;
     }
 
-    public void setSimbolo(char simbolo) {
+    public void setSimbolo(String simbolo) {
         this.simbolo = simbolo;
     }
 

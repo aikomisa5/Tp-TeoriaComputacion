@@ -47,7 +47,7 @@ public class AFD {
                // Nodo n = new Nodo();
 
 
-                Trancision newTransicion = new Trancision();
+                Transicion newTransicion = new Transicion();
             }
 
 

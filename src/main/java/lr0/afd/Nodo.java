@@ -12,7 +12,7 @@ public class Nodo {
 
     private String nombreEstado;
     private Gramatica gramatica;
-    private List<Trancision> transiciones;
+    private List<Transicion> transiciones;
     private boolean esFinal;
 
 
@@ -23,11 +23,16 @@ public class Nodo {
         this.esFinal = false;
     }
 
-    public Nodo(String nombreEstado, Gramatica gramatica, List<Trancision> transiciones, boolean esFinal) {
+    public Nodo(String nombreEstado, Gramatica gramatica, List<Transicion> transiciones, boolean esFinal) {
         this.nombreEstado = nombreEstado;
         this.gramatica = gramatica;
         this.transiciones = transiciones;
         this.esFinal = esFinal;
+    }
+
+    public Nodo() {
+        this.transiciones = new ArrayList<>();
+        this.esFinal = false;
     }
 
     public String getNombreEstado() {
@@ -46,11 +51,11 @@ public class Nodo {
         this.gramatica = gramatica;
     }
 
-    public List<Trancision> getTransiciones() {
+    public List<Transicion> getTransiciones() {
         return transiciones;
     }
 
-    public void setTransiciones(List<Trancision> transiciones) {
+    public void setTransiciones(List<Transicion> transiciones) {
         this.transiciones = transiciones;
     }
 
