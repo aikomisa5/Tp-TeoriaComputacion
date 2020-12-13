@@ -51,7 +51,12 @@ public class ParserSLR {
         //Construccion realizando la clausura y generando nodos para c/estado.
 
         ArrayList<Produccion> produccionesN0 = new ArrayList<>();
-        produccionesN0.add(new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA, simbolos));
+
+        Produccion p = new Produccion();
+        p.setVariable(Gramatica.SIGNO_DISTINGUIDO_PRIMA);
+        p.setBody(simbolos);
+        produccionesN0.add(p);
+
 
         Gramatica gramaticaAFD_I0 = new Gramatica();
         gramaticaAFD_I0.setProducciones(produccionesN0);
@@ -61,7 +66,13 @@ public class ParserSLR {
 
         n0.clausura(gramatica);
 
+        afd.getNodos().add(n0);
+
+
         afd.aumentarNodos();
+
+
+
 
         return  afd;
     }

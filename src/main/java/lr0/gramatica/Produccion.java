@@ -10,12 +10,9 @@ public class Produccion {
 
     public Produccion() {
         this.body = new ArrayList<>();
+        this.variable = "";
     }
 
-    public Produccion(String variable, List<String> body) {
-        this.variable = variable;
-        this.body = body;
-    }
 
     public String getVariable() {
         return variable;

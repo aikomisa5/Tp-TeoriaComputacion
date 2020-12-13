@@ -53,7 +53,11 @@ public class TestEjercicio3_1 {
 
         ArrayList<String> simbolos = new ArrayList<>();
         simbolos.add(Gramatica.SIGNO_DISTINGUIDO);
-        gramatica.aumentarGramatica(0,new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA,simbolos));
+
+        Produccion p = new Produccion();
+        p.setVariable(Gramatica.SIGNO_DISTINGUIDO_PRIMA);
+        p.setBody(simbolos);
+        gramatica.aumentarGramatica(0,p);
 
 
         assertTrue(result);

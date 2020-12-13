@@ -6,6 +6,7 @@ import lr0.gramatica.Produccion;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Nodo {
 
@@ -81,7 +82,8 @@ public class Nodo {
 
                     //si no existe la gramatica encontrada en la gramatica del nodo, entonces
                     // las agrego con un pivote al comienzo
-                    produccionesDeVariablePivote.addAll(this.getGramatica().getProducciones());
+
+                    //produccionesDeVariablePivote.addAll(this.getGramatica().getProducciones());
                     newProducciones.addAll(produccionesDeVariablePivote);
 
                 }
@@ -89,9 +91,17 @@ public class Nodo {
 
         }
 
-        if (!newProducciones.isEmpty()) {
-            gramatica.getProducciones().addAll(newProducciones);
+        Set<Produccion> prods = new HashSet<>(gramatica.getProducciones());
+        int gramaticaSinAdicionSize = prods.size();
+        prods.addAll(newProducciones);
+        if (gramaticaSinAdicionSize != prods.size()){
+            List<Produccion> newProds = new ArrayList<>(prods);
+            gramatica.setProducciones(newProds);
             clausura(gramaticaOriginal);
+        }
+        else
+        {
+            System.out.println("No hubo nuevas producciones, terminamos.");
         }
 
     }

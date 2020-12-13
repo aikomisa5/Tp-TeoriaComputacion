@@ -7,7 +7,7 @@ import java.util.List;
 public class Gramatica {
 
 
-    public static final  String SIGNO_DISTINGUIDO = "X_{1}";
+    public static final String SIGNO_DISTINGUIDO = "X_{1}";
     public static final String SIGNO_DISTINGUIDO_PRIMA = "X_{0}";
     public static final String PIVOTE = "*";
 
@@ -30,8 +30,8 @@ public class Gramatica {
     }
 
 
-    public void aumentarGramatica(int index,Produccion p){
-        this.getProducciones().add(index,p);
+    public void aumentarGramatica(int index, Produccion p) {
+        this.getProducciones().add(index, p);
     }
 
 
@@ -39,17 +39,25 @@ public class Gramatica {
 
         HashSet<Produccion> result = new HashSet<>();
 
-        for(int i = 0 ; i < producciones.size() ; i++){
-            if(producciones.get(i).getVariable().equals(variable)) {
-                Produccion p = new Produccion(producciones.get(i).getVariable(),producciones.get(i).getBody());
+        for (int i = 0; i < producciones.size(); i++) {
+            if (producciones.get(i).getVariable().equals(variable)) {
+                String variableOriginal = producciones.get(i).getVariable();
+                List<String> simbolosOriginal = new ArrayList<>(producciones.get(i).getBody());
 
-                for(int j = 0 ; j < p.getBody().size() ; j++) {
-                    String newPrimerSimbolo = Gramatica.PIVOTE + p.getBody().get(j);
-                    p.getBody().remove(j);
-                    p.getBody().add(j, newPrimerSimbolo);
+                Produccion p = new Produccion();
+                p.setBody(simbolosOriginal);
+                p.setVariable(variableOriginal);
+
+
+
+                if (p.getBody().get(0).charAt(0) != Gramatica.PIVOTE.charAt(0)){
+                    String newPrimerSimbolo = Gramatica.PIVOTE + p.getBody().get(0);
+                    p.getBody().remove(0);
+                    p.getBody().add(0, newPrimerSimbolo);
 
                     result.add(p);
                 }
+
             }
         }
 

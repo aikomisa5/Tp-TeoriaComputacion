@@ -24,8 +24,16 @@ public class AFD {
     }
 
     // Crea nuevos nodos a partir de los pivotes
-    public void aumentarNodos() {
+    public void aumentarNodos(Nodo nodoOrigen) {
 
+
+        //obtengo todos los simbolos direccionados por pivotes
+
+        // elimino repetidos
+
+        //para los que quedan armo nuevo nodo y realizo clausura
+
+        //para cada nodo anterior crear transicion y unir al nodo anterior "nodoOrigen"
 
 
     }
