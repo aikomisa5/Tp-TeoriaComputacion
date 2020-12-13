@@ -1,7 +1,12 @@
 package lr0.afd;
 
+import lr0.gramatica.Gramatica;
+import lr0.gramatica.Produccion;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AFD {
 
@@ -27,12 +32,32 @@ public class AFD {
     public void aumentarNodos(Nodo nodoOrigen) {
 
 
-        //obtengo todos los simbolos direccionados por pivotes
+        //obtengo todos los simbolos direccionados por pivotes y elimino repetidos
+
+        Set<String> setDeSimbolosConPivote = new HashSet<>();
+        int contador = (Integer.parseInt(nodoOrigen.getNombreEstado()));
+
+        for (Produccion produccion : nodoOrigen.getGramatica().getProducciones()) {
+            setDeSimbolosConPivote.add(produccion.getBody().get(0));
+
+            if(setDeSimbolosConPivote.contains(produccion.getBody().get(0))){
+                String newNombre =  "" + (contador++);
+
+               // nodoOrigen.getTransiciones().add();
+               // Nodo n = new Nodo();
 
 
-        // elimino repetidos
+                Trancision newTransicion = new Trancision();
+            }
+
+
+        }
+
 
         //para los que quedan armo nuevo nodo y realizo clausura
+
+
+
 
         //para cada nodo creado anteriormente crear trancision y unir al nodo anterior "nodoOrigen"
 
@@ -42,4 +67,25 @@ public class AFD {
 
 
     }
+
+
+    private ArrayList<String> getVariablesPivote(List<String> body) {
+
+        ArrayList<String> result = new ArrayList<>();
+        for(int i = 0 ; i < body.size() ; i++){
+
+            if(body.get(i).contains(Gramatica.PIVOTE + "X")){
+                String bodyProduccionI = body.get(i);
+                result.add(bodyProduccionI.substring(bodyProduccionI.indexOf("X"), bodyProduccionI.indexOf("}")+1));
+            }else{
+                String bodyProduccionI = body.get(i);
+                result.add(bodyProduccionI);
+            }
+        }
+        return result;
+    }
+
+
+
+
 }
