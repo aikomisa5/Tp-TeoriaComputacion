@@ -69,7 +69,9 @@ public class ParserSLR {
         afd.getNodos().add(n0);
 
 
-        afd.aumentarNodos();
+        afd.aumentarNodos(n0);
+
+
 
 
 

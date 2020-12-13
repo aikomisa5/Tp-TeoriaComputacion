@@ -29,11 +29,16 @@ public class AFD {
 
         //obtengo todos los simbolos direccionados por pivotes
 
+
         // elimino repetidos
 
         //para los que quedan armo nuevo nodo y realizo clausura
 
-        //para cada nodo anterior crear transicion y unir al nodo anterior "nodoOrigen"
+        //para cada nodo creado anteriormente crear trancision y unir al nodo anterior "nodoOrigen"
+
+        // this.aumentarNodos(paraCadaNodoAnteriorCreado)    aumentar nodos nuevamente para cada nodo nuevo anterior
+
+        //hasta que pivote este en terminal o al final de todos los simbolos.
 
 
     }
