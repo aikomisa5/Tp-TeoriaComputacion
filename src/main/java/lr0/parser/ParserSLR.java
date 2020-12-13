@@ -44,22 +44,24 @@ public class ParserSLR {
         Gramatica gramaticaAFD = this.gramatica;
 
         ArrayList<String> simbolos = new ArrayList<>();
-        simbolos.add(Gramatica.SIGNO_DISTINGUIDO);
+        simbolos.add(Gramatica.PIVOTE + Gramatica.SIGNO_DISTINGUIDO);
 
-        gramaticaAFD.aumentarGramatica(0,new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA,simbolos));
+        //gramaticaAFD.aumentarGramatica(0,new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA,simbolos));
 
         //Construccion realizando la clausura y generando nodos para c/estado.
 
-        Gramatica gramaticaAFD_I0 = gramaticaAFD;
+        ArrayList<Produccion> produccionesN0 = new ArrayList<>();
+        produccionesN0.add(new Produccion(Gramatica.SIGNO_DISTINGUIDO_PRIMA, simbolos));
 
-        //((Produccion) gramaticaAFD_I0.getProducciones().get(0)).cla;
+        Gramatica gramaticaAFD_I0 = new Gramatica();
+        gramaticaAFD_I0.setProducciones(produccionesN0);
 
         //Agrego nodo estado inicial
         Nodo n0 = new Nodo("0",gramaticaAFD_I0);
-        afd.getNodos().add(n0);
+
+        n0.clausura(gramatica);
 
         afd.aumentarNodos();
-
 
         return  afd;
     }

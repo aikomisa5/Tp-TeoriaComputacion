@@ -1,6 +1,7 @@
 package lr0.gramatica;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Gramatica {
@@ -13,6 +14,7 @@ public class Gramatica {
     private List<Produccion> producciones;
 
     public Gramatica() {
+        producciones = new ArrayList<>();
     }
 
     public Gramatica(List<Produccion> producciones, String ladoIzquierdo) {
@@ -33,13 +35,22 @@ public class Gramatica {
     }
 
 
-    public ArrayList<Produccion> obtenerProduccionesDeVariable(String variable) {
+    public HashSet<Produccion> obtenerProduccionesDeVariableConPivote(String variable) {
 
-        ArrayList<Produccion> result = new ArrayList<>();
+        HashSet<Produccion> result = new HashSet<>();
 
         for(int i = 0 ; i < producciones.size() ; i++){
-            if(producciones.get(i).getVariable().equals(variable))
-                result.add(producciones.get(i));
+            if(producciones.get(i).getVariable().equals(variable)) {
+                Produccion p = new Produccion(producciones.get(i).getVariable(),producciones.get(i).getBody());
+
+                for(int j = 0 ; j < p.getBody().size() ; j++) {
+                    String newPrimerSimbolo = Gramatica.PIVOTE + p.getBody().get(j);
+                    p.getBody().remove(j);
+                    p.getBody().add(j, newPrimerSimbolo);
+
+                    result.add(p);
+                }
+            }
         }
 
         return result;
