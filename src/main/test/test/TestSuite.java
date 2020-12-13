@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
 	TestEjercicio1a_sinSimbolosInutiles.class,
 	TestEjercicio1b.class,
 	TestEjercicio2_Fails.class,
+	TestEjercicio2_Success.class,
 	TestEjercicio2a_1.class,
 	TestEjercicio2a_2.class,
 	TestEjercicio2a_3.class,

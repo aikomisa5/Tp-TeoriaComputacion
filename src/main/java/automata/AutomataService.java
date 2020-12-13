@@ -16,12 +16,14 @@ import exceptions.BadFileException;
 
 public class AutomataService {
 
+	public static final String ERROR_CANT_ESTADOS = "Ocurrio un error al intentar obtener el dato de la cantidad de estados del archivo: ";
+	public static final String ERROR_EMPTY_FILE = "Ocurrio un error al intentar obtener los datos del automata del archivo, debido a que el archivo esta vacio";
 	private static final String patternSimbolosInput = "([a-zA-Z0-9]+,\\s)*[a-zA-Z0-9]{1}";
-	private static final String formatoSimbolosInput = "SimboloInput, SimboloInput, SimboloInput... Ej1: a, b, c. Ej2: a";
+	public static final String formatoSimbolosInput = "SimboloInput, SimboloInput, SimboloInput... Ej1: a, b, c. Ej2: a";
 	private static final String patternEstadosFinales = "([0-9]+,\\s)*[0-9]{1}";
-	private static final String formatoEstadosFinales = "EstadoFinal, EstadoFinal, EstadoFinal... Ej1: 1, 2, 3. Ej2: 1";
+	public static final String formatoEstadosFinales = "EstadoFinal, EstadoFinal, EstadoFinal... Ej1: 1, 2, 3. Ej2: 1";
 	private static final String patternTransicion = "[1-9]+,\\s[a-zA-Z]+\\s->\\s[1-9]+";
-	private static final String formatoTransicion = "NumeroEstadoSalida, SimboloInput -> NumeroEstadoLlegada. Ej: 4, E -> 4";
+	public static final String formatoTransicion = "NumeroEstadoSalida, SimboloInput -> NumeroEstadoLlegada. Ej: 4, E -> 4";
 	private static final String EPSILON = "E";
 	private static final String ESTADO_INICIAL = "1";
 	private static final String ESTADO_TRAMPA = "T";
@@ -173,7 +175,7 @@ public class AutomataService {
 			myReader = new Scanner(myObj);
 
 			if (myReader.hasNextLine() == false) {
-				String msj = "Ocurrio un error al intentar obtener los datos del automata del archivo, debido a que el archivo esta vacio";
+				String msj = ERROR_EMPTY_FILE;
 				System.out.println(msj);
 				throw new BadFileException(msj);
 			}
@@ -215,7 +217,7 @@ public class AutomataService {
 						afnd.setCantEstados(Integer.valueOf(data));
 					}
 					catch(Exception e) {
-						String msj = "Ocurrio un error al intentar obtener el dato de la cantidad de estados del archivo: " + e.getMessage();
+						String msj = ERROR_CANT_ESTADOS + e.getMessage();
 						System.out.println(msj);
 						throw new BadFileException(msj, e);
 					}
