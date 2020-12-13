@@ -1,5 +1,7 @@
 package automata;
 
+import exceptions.BadTransicionException;
+
 public class Transicion implements Comparable<Transicion> {
 
 	private String estadoSalida;
@@ -10,8 +12,15 @@ public class Transicion implements Comparable<Transicion> {
 		super();
 	}
 
-	public Transicion(String estadoSalida, String simboloInput, String estadoLlegada) {
-		super();
+	public Transicion(String estadoSalida, String simboloInput, String estadoLlegada) throws BadTransicionException {
+		super();		
+		
+		if (estadoSalida == null || simboloInput == null || estadoLlegada == null) {
+			String msj = "Error. No se puede enviar como parametro del constructor un null";
+			System.out.println(msj);
+			throw new BadTransicionException(msj);
+		}
+		
 		this.estadoSalida = estadoSalida;
 		this.simboloInput = simboloInput;
 		this.estadoLlegada = estadoLlegada;

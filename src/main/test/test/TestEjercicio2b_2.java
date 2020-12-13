@@ -29,7 +29,7 @@ public class TestEjercicio2b_2 {
 		e_afnd = service.getAFNDFromTxtFile(fileName);
 		afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 		System.out.println(LINEA);
-		System.out.println("TEST 2");
+		System.out.println("TEST 2b_2");
 		System.out.println(LINEA);
 		service.printAutomata(afd, "AFD");
 	}
