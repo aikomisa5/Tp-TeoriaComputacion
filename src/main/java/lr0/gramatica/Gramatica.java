@@ -3,6 +3,7 @@ package lr0.gramatica;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class Gramatica {
 
@@ -34,6 +35,18 @@ public class Gramatica {
         this.getProducciones().add(index, p);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Gramatica gramatica = (Gramatica) o;
+        return Objects.equals(producciones, gramatica.producciones);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(producciones);
+    }
 
     public HashSet<Produccion> obtenerProduccionesDeVariableConPivote(String variable) {
 

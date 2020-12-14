@@ -65,7 +65,7 @@ public class TestEjercicio3_1 {
 
 
     @Test
-    public void testGramatica_0_ConstruccionAFD() throws FileNotFoundException, BadFileException {
+    public void testGramatica_0_ConstruccionAFD() throws FileNotFoundException, BadFileException, IllegalAccessException {
 
         System.out.println("--------------------------");
         System.out.println("testGramatica_0_ConstruccionAFD");

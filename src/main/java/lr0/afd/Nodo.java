@@ -3,10 +3,7 @@ package lr0.afd;
 import lr0.gramatica.Gramatica;
 import lr0.gramatica.Produccion;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Nodo {
 
@@ -67,6 +64,21 @@ public class Nodo {
         this.esFinal = esFinal;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Nodo nodo = (Nodo) o;
+        return esFinal == nodo.esFinal &&
+                Objects.equals(nombreEstado, nodo.nombreEstado) &&
+                Objects.equals(gramatica, nodo.gramatica) &&
+                Objects.equals(transiciones, nodo.transiciones);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombreEstado, gramatica, transiciones, esFinal);
+    }
 
     public void clausura(Gramatica gramaticaOriginal){
 
@@ -78,22 +90,14 @@ public class Nodo {
                 //Obtengo las variables que tienen pivote
                 ArrayList<String> variablesConPivote = getVariablesPivote(gramatica.getProducciones().get(i).getBody());
 
-
                 for(int j = 0 ; j < variablesConPivote.size(); j++){
 
                     //busco la/s produccion/es de la variable  en la gramatica original
                     HashSet<Produccion> produccionesDeVariablePivote = gramaticaOriginal
                             .obtenerProduccionesDeVariableConPivote(variablesConPivote.get(j));
-
-                    //si no existe la gramatica encontrada en la gramatica del nodo, entonces
-                    // las agrego con un pivote al comienzo
-
-                    //produccionesDeVariablePivote.addAll(this.getGramatica().getProducciones());
                     newProducciones.addAll(produccionesDeVariablePivote);
-
                 }
             }
-
         }
 
         Set<Produccion> prods = new HashSet<>(gramatica.getProducciones());
@@ -103,10 +107,6 @@ public class Nodo {
             List<Produccion> newProds = new ArrayList<>(prods);
             gramatica.setProducciones(newProds);
             clausura(gramaticaOriginal);
-        }
-        else
-        {
-            System.out.println("No hubo nuevas producciones, terminamos.");
         }
 
     }
