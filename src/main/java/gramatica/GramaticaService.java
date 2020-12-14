@@ -10,12 +10,15 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import automata.Automata;
+
 public class GramaticaService {
 
     private static final String patternString = "[a-zA-Z]{1}\\s+->\\s+[a-zA-Z]+";
     private static final String formatoGramatica = "SimboloInput -> Simbolos. Ej: S -> ABC";
     private static final String EPSILON = "E";
-    private static final String ESTADO_INICIAL = "S";
+    private static final String SIMBOLO_INICIAL = "S";
+	private static final String LINEA = "----------------------------------------";
 
     /**
      * Metodos publicos
@@ -35,7 +38,7 @@ public class GramaticaService {
         Gramatica response = new Gramatica();
 
         Scanner myReader = null;
-        int cantEstadoInicial = 0;
+        int cantSimboloInicial = 0;
 
         try {
             File myObj = new File("src/main/resources/" + nombreGramatica);
@@ -69,8 +72,8 @@ public class GramaticaService {
 
                 String[] parts = data.split("->");
 
-                if(parts[0].contains(ESTADO_INICIAL))
-                    cantEstadoInicial += 1;
+                if(parts[0].contains(SIMBOLO_INICIAL))
+                    cantSimboloInicial += 1;
 
                 produccion.setSimboloInput(parts[0].trim());
                 String simbolos = parts[1].trim();
@@ -84,12 +87,12 @@ public class GramaticaService {
 
                 producciones.add(produccion);
 
-                response.setEstadoInicial(ESTADO_INICIAL);
+                response.setEstadoInicial(SIMBOLO_INICIAL);
                 response.setProducciones(producciones);
 
             }
 
-            if (cantEstadoInicial == 0) {
+            if (cantSimboloInicial == 0) {
                 String msj = "Ocurrio un error, la gramática no tiene estado inicial S.";
                 System.out.println(msj);
                 throw new BadFileException(msj);
@@ -117,6 +120,82 @@ public class GramaticaService {
 
         return response;
     }
-
-
+    
+    public boolean algoritmoCYK(Gramatica gramatica, String palabra) {
+		if(palabra == null ) {
+			throw new NullPointerException("El string no debe ser null");
+		}
+		
+		if(palabra.length() == 0) {
+			throw new IllegalArgumentException("Debe ingresar un string con longitud mayor o igual a 1");
+		}
+	
+		if (gramatica.isInFNC()) {
+			int n = palabra.length();
+			int r = gramatica.getProducciones().size();
+			
+	//		P[n,n,r] es un array de booleans. Inicializo todos los elementos de P en false. 
+			boolean P[][][] =  new boolean[n][n][r];
+			for(int i = 0 ; i < n ; i++) {
+				for (int j = 0 ; j < n ; j++) {
+					for (int k = 0 ; k < r ; k++) {
+						P[i][j][k] = false;
+					}
+				}
+			}
+				
+	//		Para cada produccion de longitud 1:  Rj -> ai
+			for(int i = 0 ; i < n ; i++) {
+				for(int j = 0 ; j < r ; j++) {
+					Produccion produccion = gramatica.getProducciones().get(j);
+					if(produccion.getSimbolos().size() == 1) {
+						for(Character c : produccion.getSimbolos()) {
+							if(c.equals(palabra.charAt(i)) && gramatica.esSimboloTerminalNoEpsilon(c)) {
+								int k = gramatica.buscarIndiceProduccion(produccion.getSimboloInput());
+									P[i][0][k] = true;
+							}
+						}
+					}
+				}
+			}	
+						
+	//	    Para cada produccion con longitud 2: R_A -> R_B R_C. 
+			for(int i = 1 ; i < n ; i++) {  
+				for (int j = 0; j < n - i ; j++) {
+					for(int k = 0 ; k < i ; k++) {
+						for (int p = 0 ; p < r ; p++) {
+							Produccion produccion = gramatica.getProducciones().get(p);
+							if (produccion.getSimbolos().size() == 2) {
+								
+								int A = gramatica.buscarIndiceProduccion(produccion.getSimboloInput());
+								int B = gramatica.buscarIndiceProduccion(produccion.getSimbolos().get(0).toString());
+								int C = gramatica.buscarIndiceProduccion(produccion.getSimbolos().get(1).toString());
+									
+								if (P[j][k][B] == true && P[j + k + 1][i - k - 1][C] == true) {
+									P[j][i][A] = true;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			// Si el simbolo inicial S está en el indice [0][n-1], entonces el string es reconocido por la gramatica
+			int s = gramatica.buscarIndiceProduccion(gramatica.getEstadoInicial());
+			if(P[0][n-1][s]) {
+				return true;
+			}
+		}
+		return false;	
+	}
+    
+    public void printGramatica(Gramatica gramatica) {
+		System.out.println(LINEA);
+		System.out.println("Simbolo inicial: "+ SIMBOLO_INICIAL);
+		System.out.println("Gramatica:");
+		gramatica.getProducciones().forEach(g ->{
+			System.out.println(g.getSimboloInput() + " -> " + g.getSimbolos());
+		});
+		System.out.println(LINEA);
+    }
 }
