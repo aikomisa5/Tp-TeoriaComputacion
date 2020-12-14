@@ -78,7 +78,7 @@ public class Gramatica {
 
         List<Produccion> newProducciones = new ArrayList<>();
 
-        List<Character> N = new ArrayList<>();
+        List<Character> N = new ArrayList<>();//Reconozco a los nulleables
 
         //1º Agrego los simbolos que derivan directamente de vacio
         for (Produccion p : getProducciones()) {
@@ -108,23 +108,30 @@ public class Gramatica {
         //3º Genero nueva gramática, analizando la anterior y agregando producciones nuevas para los casos nullables.
         for (Produccion p : getProducciones()) {
 
+            //En cada produccion identifico las nulleables detectadas anteriormente
             List<String> nullables = filtroNullables(p.getSimbolos(), N);
 
-            List<String> combinacionesNullables = obtenerCombinacionesNullables(nullables);
+
+            List<String> combinacionesNullables = obtenerCombinacionesNullables(nullables);//Genero las combinaciones en base a las variables nulleables
 
             //Genero nuevas producciones con las combinaciones de nullables
             for (String combinacion : combinacionesNullables) {
 
                 ArrayList<Character> newSimbolos = new ArrayList<>();
                 String terminales = "";
-                for (Character c : p.getSimbolos()) {
+                for (Character c : p.getSimbolos()) {//Analizo produccion original y veo que dejo y que no de p.getSimbolos()
                     if (!Character.isUpperCase(c)) {
                         newSimbolos.add(c); //Es terminal, lo agrego.
                         terminales = terminales + c.toString();
                     }
 
-                    if (combinacion.contains(c.toString()))
+                    if(!N.contains(c.toString().charAt(0)) && Character.isUpperCase(c))// Dejo las variables que no estoy evaluando en la combinacion
                         newSimbolos.add(c);
+
+                    if(combinacion.contains(c.toString()))
+                        newSimbolos.add(c);
+
+
                 }
                 //Caso particular para dejar sólo los terminales
                 if (!terminales.isEmpty()) {
@@ -132,7 +139,16 @@ public class Gramatica {
                     Produccion newP = new Produccion(p.getSimboloInput(), terminalesSimbolos);
                     newProducciones.add(newP);
                 }
-                //Caso particular para produccion vacía
+
+                //Caso particular para dejar la produccion sin nulleables
+                List<Character> sinNulleableSimbolos = filtroCombinacion(p.getSimbolos(),combinacion);
+                if(!sinNulleableSimbolos.isEmpty()) {
+                    Produccion newP2 = new Produccion(p.getSimboloInput(), sinNulleableSimbolos);
+                    newProducciones.add(newP2);
+                }
+
+
+                //Si tengo simbolos para crear produccion, la agrego
                 if (!newSimbolos.isEmpty()) {
                     Produccion newP = new Produccion(p.getSimboloInput(), newSimbolos);
                     newProducciones.add(newP);
@@ -140,7 +156,20 @@ public class Gramatica {
             }
         }
 
-        setProducciones(newProducciones);
+        //Elimino duplicados
+        HashSet conjunto = new HashSet(newProducciones);
+
+        ArrayList sinDuplicados = new ArrayList(conjunto);
+        setProducciones(sinDuplicados);
+    }
+
+    private List<Character> filtroCombinacion(List<Character> simbolos, String combinacion) {
+        List<Character> simbolosFiltrados = new ArrayList<>();
+        for(int i = 0; i < simbolos.size();i++){
+            if(!combinacion.contains(simbolos.get(i).toString()))
+                simbolosFiltrados.add(simbolos.get(i));
+        }
+        return simbolosFiltrados;
     }
 
     private List<Character> getCharacters(char[] toCharArray) {
