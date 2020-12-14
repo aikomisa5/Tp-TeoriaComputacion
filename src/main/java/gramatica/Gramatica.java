@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,13 +75,13 @@ public class Gramatica {
      * Crece exponencialmente agregando nuevas producciones.
      */
 
-    public void eliminarE() {
+    public void eliminarEViejo() {
 
         List<Produccion> newProducciones = new ArrayList<>();
 
         List<Character> N = new ArrayList<>();
 
-        //1º Agrego los simbolos que derivan directamente de vacio
+        //1º Agrego los simbolos que derivan directamente vacio
         for (Produccion p : getProducciones()) {
             boolean isNullable = false;
 
@@ -104,45 +105,153 @@ public class Gramatica {
             if (isNullable)
                 N.add(p.getSimboloInput().charAt(0));
         }
-
+        
         //3º Genero nueva gramática, analizando la anterior y agregando producciones nuevas para los casos nullables.
         for (Produccion p : getProducciones()) {
 
             List<String> nullables = filtroNullables(p.getSimbolos(), N);
 
-            List<String> combinacionesNullables = obtenerCombinacionesNullables(nullables);
+            List<String> combinacionesNullables = obtenerCombinacionesNullablesViejo(nullables);
 
-            //Genero nuevas producciones con las combinaciones de nullables
-            for (String combinacion : combinacionesNullables) {
+            boolean contieneAlgunNulleable = false;
+            for (Character simbolo : p.getSimbolos()) {
+                for(Character character : N) {
+                	contieneAlgunNulleable = contieneAlgunNulleable || character == simbolo
+                			|| simbolo.equals('E');
+                }
+            }
+            if(!contieneAlgunNulleable) {
+            	newProducciones.add(p);
+            }
+            else {
+            	//Genero nuevas producciones con las combinaciones de nullables
+                for (String combinacion : combinacionesNullables) {
+                	
+                    ArrayList<Character> newSimbolos = new ArrayList<>();
+                    String terminales = "";
+                    for (Character c : p.getSimbolos()) {
+                        if (!Character.isUpperCase(c)) {
+                            newSimbolos.add(c); //Es terminal, lo agrego.
+                            terminales = terminales + c.toString();
+                        }
+                        else {
+                            if ((combinacion.contains(c.toString())
+                            		|| !nullables.contains(c.toString()))
+                            		&& !newSimbolos.contains(c))
+                                newSimbolos.add(c);
+                        }
 
-                ArrayList<Character> newSimbolos = new ArrayList<>();
-                String terminales = "";
-                for (Character c : p.getSimbolos()) {
-                    if (!Character.isUpperCase(c)) {
-                        newSimbolos.add(c); //Es terminal, lo agrego.
-                        terminales = terminales + c.toString();
+
                     }
-
-                    if (combinacion.contains(c.toString()))
-                        newSimbolos.add(c);
-                }
-                //Caso particular para dejar sólo los terminales
-                if (!terminales.isEmpty()) {
-                    List<Character> terminalesSimbolos = getCharacters(terminales.toCharArray());
-                    Produccion newP = new Produccion(p.getSimboloInput(), terminalesSimbolos);
-                    newProducciones.add(newP);
-                }
-                //Caso particular para produccion vacía
-                if (!newSimbolos.isEmpty()) {
-                    Produccion newP = new Produccion(p.getSimboloInput(), newSimbolos);
-                    newProducciones.add(newP);
+                    //Caso particular para dejar sólo los terminales
+                    if (!terminales.isEmpty()) {
+                        List<Character> terminalesSimbolos = getCharacters(terminales.toCharArray());
+                        Produccion newP = new Produccion(p.getSimboloInput(), terminalesSimbolos);
+                        newProducciones.add(newP);
+                    }
+                    //Caso particular para produccion vacía
+                    if (!newSimbolos.isEmpty()) {
+                        Produccion newP = new Produccion(p.getSimboloInput(), newSimbolos);
+                        newProducciones.add(newP);
+                    }
                 }
             }
         }
-
+        
+        for(Produccion p: getProducciones()) {
+        	for (Character simbolo : p.getSimbolos()) {
+        		if (N.contains(simbolo))
+        			newProducciones.add(p);
+        	}
+        }
+        
+        Set<Produccion> prodSet = new HashSet<>(newProducciones);
+        newProducciones = new ArrayList<>(prodSet);
         setProducciones(newProducciones);
     }
 
+    public void eliminarE() {
+         List<Character> N = new ArrayList<>();
+
+         //1º Agrego los simbolos que derivan directamente vacio
+         for (Produccion p : getProducciones()) {
+             boolean isNullable = false;
+
+             for (Character c : p.getSimbolos())
+                 if (c.equals('E'))
+                     isNullable = true;
+             if (isNullable)
+                 N.add(p.getSimboloInput().charAt(0));
+         }
+         //2º Verifico si existe alguna produccion que esté completamente en N
+         for (Produccion p : getProducciones()) {
+             boolean isNullable = true;
+             for (Character c : p.getSimbolos())
+                 if (!N.contains(c))
+                     isNullable = false;
+             if (isNullable)
+                 N.add(p.getSimboloInput().charAt(0));
+         }
+
+         List<String> strings = new ArrayList<>();
+         Set<Produccion> producciones = new HashSet<>();
+         for (Produccion produccion : getProducciones()) {
+        	 for (Character simboloNulleable : N) {
+        		 strings = obtenerCombinacionesNullables(produccion, simboloNulleable);
+        	 }
+        	 System.out.println(strings);
+        	 for (String string : strings) {
+        		 List<Character> simbolos = new ArrayList<>();
+        		 for (int i = 0 ; i < string.length(); i++)
+        			 simbolos.add(string.charAt(i));
+        		 Produccion nuevaProduccion = new Produccion(produccion.getSimboloInput(),simbolos);
+        		 producciones.add(nuevaProduccion);
+        	 }
+         }
+         List<Produccion> prods = new ArrayList<>(producciones);
+         if (prods.size() > 0)
+        	 setProducciones(prods);
+    }
+    
+    private List<String> obtenerCombinacionesNullables(Produccion produccion, Character simboloNulleable) {
+        List<String> strings = new ArrayList<>();
+    	StringBuilder str = new StringBuilder();
+        for(Character simbolo: produccion.getSimbolos()) {
+        	str.append(simbolo);
+        }
+        // queremos el que tiene todo.
+        String stringSinE = str.toString().replace("E", "");
+        if (stringSinE.isBlank()) {
+        	return strings;
+        }
+        strings.add(stringSinE);
+        String string = str.toString();
+        if(str.toString().contains(""+simboloNulleable)) {
+        	 Pattern pattern = Pattern.compile("("+simboloNulleable+")");
+             Matcher matcher = pattern.matcher(string);
+             long count = matcher.results().count();
+             matcher = pattern.matcher(string);
+             while (matcher.find()) {
+            	 string = matcher.replaceFirst("");
+            	 strings.add(string);
+                 matcher = pattern.matcher(string);
+             }
+             if (count > 1) {
+            	 string = str.reverse().toString();
+            	 
+               	 pattern = Pattern.compile("("+simboloNulleable+")");
+                 matcher = pattern.matcher(string);
+                 while (matcher.find()) {
+                	 string = matcher.replaceFirst("");
+                	 StringBuilder strB = new StringBuilder(string);
+                	 strings.add(strB.reverse().toString());
+                     matcher = pattern.matcher(string);
+                 }
+             }
+        }
+        return strings;
+    }
+    
     private List<Character> getCharacters(char[] toCharArray) {
         ArrayList<Character> resultList = new ArrayList<>();
 
@@ -154,12 +263,41 @@ public class Gramatica {
         return resultList;
     }
 
-    private List<String> obtenerCombinacionesNullables(List<String> nullables) {
+    private List<String> obtenerCombinacionesNullablesViejo(List<String> nullables) {
         ArrayList<String> result = new ArrayList<>();
         int n = nullables.size();
         int total = (int) Math.pow(2d, Double.valueOf(n));
         for (int i = 1; i < total; i++) {
-            String code = Integer.toBinaryString(total | i).substring(1);
+        	String code;
+            if (n == 1) {
+            	code = Integer.toBinaryString(total).substring(1);
+            }
+            else {
+            	code= Integer.toBinaryString(total | i).substring(1);
+            }
+            String simbolos = "";
+            for (int j = 0; j < n; j++) {
+                if (code.charAt(j) == '1') {
+                    simbolos = simbolos + nullables.get(j);
+                }
+            }
+            result.add(simbolos);
+        }
+        return result;
+    }
+    
+    private List<String> obtenerCombinacionesNullables2(List<String> nullables, List<Character> simbolosDeLaProduccion) {
+        ArrayList<String> result = new ArrayList<>();
+        int n = nullables.size();
+        int total = (int) Math.pow(2d, Double.valueOf(n));
+        for (int i = 1; i < total; i++) {
+            String code;
+            if (n == 1) {
+            	code = Integer.toBinaryString(i);
+            }
+            else {
+            	code= Integer.toBinaryString(total).substring(1);
+            }
             String simbolos = "";
             for (int j = 0; j < n; j++) {
                 if (code.charAt(j) == '1') {

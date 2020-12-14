@@ -13,7 +13,7 @@ public class TestEjercicio1a_LimpiezaGramatica {
 
 	private static GramaticaService gramaticaService = new GramaticaService();
 	private static Gramatica gramatica = new Gramatica();
-	private static String file = "gramatica1_LimpiezaGramatica.txt";
+	private static String file = "gramatica_limpiezaGramatica_1.txt";
 	private static final String LINEA = "----------------------------------------";
 	
 	@BeforeClass
@@ -30,7 +30,7 @@ public class TestEjercicio1a_LimpiezaGramatica {
 	public void limpiezaGramatica1Test() {
 		System.out.println(LINEA);
 		System.out.println("Nueva gramática");
-//		gramatica.eliminarE();
+		gramatica.eliminarE();
 ////		gramatica.eliminarProduccionesUnitarias();
 		gramaticaService.printGramatica(gramatica);
 ////		gramatica.eliminarProduccionesUnitarias();
