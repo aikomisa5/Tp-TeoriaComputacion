@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,107 +68,6 @@ public class Gramatica {
         return true;
     }
 
-    /*
-     * Función que actualiza las producciones eliminando del lado derecho todas las E.
-     * En caso de que sea solo una producción con una E, elimina la producción.
-     * Crece exponencialmente agregando nuevas producciones.
-     */
-
-    public void eliminarEViejo() {
-
-        List<Produccion> newProducciones = new ArrayList<>();
-
-        List<Character> N = new ArrayList<>();
-
-        //1º Agrego los simbolos que derivan directamente vacio
-        for (Produccion p : getProducciones()) {
-            boolean isNullable = false;
-
-            for (Character c : p.getSimbolos()) {
-                if (c.equals('E')) {
-                    isNullable = true;
-                }
-            }
-            if (isNullable)
-                N.add(p.getSimboloInput().charAt(0));
-        }
-        //2º Verifico si existe alguna produccion que esté completamente en N
-        for (Produccion p : getProducciones()) {
-            boolean isNullable = true;
-
-            for (Character c : p.getSimbolos()) {
-                if (!N.contains(c)) {
-                    isNullable = false;
-                }
-            }
-            if (isNullable)
-                N.add(p.getSimboloInput().charAt(0));
-        }
-        
-        //3º Genero nueva gramática, analizando la anterior y agregando producciones nuevas para los casos nullables.
-        for (Produccion p : getProducciones()) {
-
-            List<String> nullables = filtroNullables(p.getSimbolos(), N);
-
-            List<String> combinacionesNullables = obtenerCombinacionesNullablesViejo(nullables);
-
-            boolean contieneAlgunNulleable = false;
-            for (Character simbolo : p.getSimbolos()) {
-                for(Character character : N) {
-                	contieneAlgunNulleable = contieneAlgunNulleable || character == simbolo
-                			|| simbolo.equals('E');
-                }
-            }
-            if(!contieneAlgunNulleable) {
-            	newProducciones.add(p);
-            }
-            else {
-            	//Genero nuevas producciones con las combinaciones de nullables
-                for (String combinacion : combinacionesNullables) {
-                	
-                    ArrayList<Character> newSimbolos = new ArrayList<>();
-                    String terminales = "";
-                    for (Character c : p.getSimbolos()) {
-                        if (!Character.isUpperCase(c)) {
-                            newSimbolos.add(c); //Es terminal, lo agrego.
-                            terminales = terminales + c.toString();
-                        }
-                        else {
-                            if ((combinacion.contains(c.toString())
-                            		|| !nullables.contains(c.toString()))
-                            		&& !newSimbolos.contains(c))
-                                newSimbolos.add(c);
-                        }
-
-
-                    }
-                    //Caso particular para dejar sólo los terminales
-                    if (!terminales.isEmpty()) {
-                        List<Character> terminalesSimbolos = getCharacters(terminales.toCharArray());
-                        Produccion newP = new Produccion(p.getSimboloInput(), terminalesSimbolos);
-                        newProducciones.add(newP);
-                    }
-                    //Caso particular para produccion vacía
-                    if (!newSimbolos.isEmpty()) {
-                        Produccion newP = new Produccion(p.getSimboloInput(), newSimbolos);
-                        newProducciones.add(newP);
-                    }
-                }
-            }
-        }
-        
-        for(Produccion p: getProducciones()) {
-        	for (Character simbolo : p.getSimbolos()) {
-        		if (N.contains(simbolo))
-        			newProducciones.add(p);
-        	}
-        }
-        
-        Set<Produccion> prodSet = new HashSet<>(newProducciones);
-        newProducciones = new ArrayList<>(prodSet);
-        setProducciones(newProducciones);
-    }
-
     public void eliminarE() {
          List<Character> N = new ArrayList<>();
 
@@ -221,7 +119,7 @@ public class Gramatica {
         }
         // queremos el que tiene todo.
         String stringSinE = str.toString().replace("E", "");
-        if (stringSinE.isBlank()) {
+        if (stringSinE.equals("")) {
         	return strings;
         }
         strings.add(stringSinE);
@@ -250,75 +148,6 @@ public class Gramatica {
              }
         }
         return strings;
-    }
-    
-    private List<Character> getCharacters(char[] toCharArray) {
-        ArrayList<Character> resultList = new ArrayList<>();
-
-        for (int i = 0; i < toCharArray.length; i++) {
-            resultList.add(Character.valueOf(toCharArray[i]));
-
-        }
-
-        return resultList;
-    }
-
-    private List<String> obtenerCombinacionesNullablesViejo(List<String> nullables) {
-        ArrayList<String> result = new ArrayList<>();
-        int n = nullables.size();
-        int total = (int) Math.pow(2d, Double.valueOf(n));
-        for (int i = 1; i < total; i++) {
-        	String code;
-            if (n == 1) {
-            	code = Integer.toBinaryString(total).substring(1);
-            }
-            else {
-            	code= Integer.toBinaryString(total | i).substring(1);
-            }
-            String simbolos = "";
-            for (int j = 0; j < n; j++) {
-                if (code.charAt(j) == '1') {
-                    simbolos = simbolos + nullables.get(j);
-                }
-            }
-            result.add(simbolos);
-        }
-        return result;
-    }
-    
-    private List<String> obtenerCombinacionesNullables2(List<String> nullables, List<Character> simbolosDeLaProduccion) {
-        ArrayList<String> result = new ArrayList<>();
-        int n = nullables.size();
-        int total = (int) Math.pow(2d, Double.valueOf(n));
-        for (int i = 1; i < total; i++) {
-            String code;
-            if (n == 1) {
-            	code = Integer.toBinaryString(i);
-            }
-            else {
-            	code= Integer.toBinaryString(total).substring(1);
-            }
-            String simbolos = "";
-            for (int j = 0; j < n; j++) {
-                if (code.charAt(j) == '1') {
-                    simbolos = simbolos + nullables.get(j);
-                }
-            }
-            result.add(simbolos);
-        }
-        return result;
-    }
-
-
-    private List<String> filtroNullables(List<Character> simbolos, List<Character> n) {
-
-        List<String> result = new ArrayList<>();
-
-        for (Character c : simbolos)
-            if (n.contains(c))
-                result.add(c.toString());
-
-        return result;
     }
 
 
