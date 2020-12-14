@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TestEjercicio1a_1.class,
+@Suite.SuiteClasses({TestEjercicio1a_producciones_e.class,
 	TestEjercicio1a_2.class,
 	TestEjercicio1a_generadores.class,
 	TestEjercicio1a_isFNC.class,

@@ -1,9 +1,10 @@
 package gramatica;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Produccion {
+public class Produccion implements Comparable<Produccion>{
 
     private String simboloInput;
     private List<Character> simbolos;
@@ -63,8 +64,21 @@ public class Produccion {
         return ((this.simboloInput + this.simbolos.toString())).hashCode();
     }
 
+
 	@Override
 	public String toString() {
 		return "Produccion [simboloInput=" + simboloInput + ", simbolos=" + simbolos + "]";
 	}
+
+    @Override
+    public int compareTo(Produccion o) {
+
+        int result2 = this.simboloInput.compareTo(o.simboloInput);
+
+        if (result2 != 0) {
+            return result2;
+        }
+
+        return this.getSimbolos().toString().compareTo(o.getSimbolos().toString());
+    }
 }
