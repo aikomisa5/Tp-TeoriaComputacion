@@ -10,17 +10,17 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ParserSLR {
+public class ParserLR0 {
 
     private Gramatica gramatica;
     private AFD afd;
     private int contador;
 
-    public ParserSLR(Gramatica gramatica) {
+    public ParserLR0(Gramatica gramatica) {
         this.gramatica = gramatica;
     }
 
-    public ParserSLR(Gramatica gramatica, AFD afd) {
+    public ParserLR0(Gramatica gramatica, AFD afd) {
         this.gramatica = gramatica;
         this.afd = afd;
     }

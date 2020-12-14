@@ -5,7 +5,7 @@ import exceptions.BadFileException;
 import lr0.gramatica.Gramatica;
 import lr0.gramatica.GramaticaLR0Service;
 import lr0.gramatica.Produccion;
-import lr0.parser.ParserSLR;
+import lr0.parser.ParserLR0;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -73,8 +73,8 @@ public class TestEjercicio3_1 {
 
         Gramatica gramatica = parserLR0Service.getGramaticaFromTxtFile("lr0_1_noLR0.txt");
 
-        ParserSLR parserSLR = new ParserSLR(gramatica);
-        parserSLR.generarParserLR0();
+        ParserLR0 parserLR0 = new ParserLR0(gramatica);
+        parserLR0.generarParserLR0();
 
     }
 
@@ -89,9 +89,9 @@ public class TestEjercicio3_1 {
 
         Gramatica gramatica = parserLR0Service.getGramaticaFromTxtFile("lr0_1.txt");
 
-        ParserSLR parserSLR = new ParserSLR(gramatica);
+        ParserLR0 parserLR0 = new ParserLR0(gramatica);
 
-        parserSLR.generarParserLR0();
+        parserLR0.generarParserLR0();
 
 
         assertTrue(result);
