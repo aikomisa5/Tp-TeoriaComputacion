@@ -93,36 +93,12 @@ public class ParserSLR {
                     asignarShift(tablaAction, nodo, produccion, indexDelPivote);
                 }
                 if (produccion.getBody().get(produccion.getBody().size()-1).equals(Gramatica.PIVOTE) &&
-                !produccion.getVariable().equals(Gramatica.SIGNO_DISTINGUIDO_PRIMA)){
-                    // queremos el simbolo que viene antes del pivote.
-                    List<String> bodyABuscar = new ArrayList<>(produccion.getBody());
-                    bodyABuscar.remove(bodyABuscar.size()-1); //quito el pivote.
-                    int indexDeLaProduccionQueReduce = -1;
-                    /*
-                     *  Esto funciona porque es una lista, y van a estar ordenados durante ejecuccion a menos que los toquemos.
-                    */
-                    for (int j = 0; j < gramatica.getProducciones().size(); j++) {
-                        Produccion produccionAReducir = gramatica.getProducciones().get(j);
-                        if (produccionAReducir.getBody().equals(bodyABuscar)){
-                            indexDeLaProduccionQueReduce = j;
-                            break;
-                        }
-                    }
-                    for (int k = 1; k <  tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1].length; k++) {
-                        if (tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] == null)
-                        tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] = "r"+indexDeLaProduccionQueReduce;
-                        else
-                            throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era" + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] );
-                    }
+                    !produccion.getVariable().equals(Gramatica.SIGNO_DISTINGUIDO_PRIMA)){
+                    asignarReduce(tablaAction, nodo, produccion);
                 }
                 //hay que aceptar.
                 if(produccion.getVariable().equals(Gramatica.SIGNO_DISTINGUIDO_PRIMA) && produccion.getBody().size() >1){
-                    if (produccion.getBody().get(produccion.getBody().size()-2).equals(Gramatica.SIGNO_DISTINGUIDO) &&
-                            produccion.getBody().get(produccion.getBody().size()-1).equals(Gramatica.PIVOTE))
-                        if (tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] == null)
-                            tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] = "ACCEPT";
-                        else
-                            throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era " + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] );
+                    asignarAccept(tablaAction, nodo, produccion);
                 }
             }
 
@@ -154,13 +130,43 @@ public class ParserSLR {
         }
     }
 
+    private void asignarReduce(String[][] tablaAction, Nodo nodo, Produccion produccion) {
+        // queremos el simbolo que viene antes del pivote.
+        List<String> bodyABuscar = new ArrayList<>(produccion.getBody());
+        bodyABuscar.remove(bodyABuscar.size()-1); //quito el pivote.
+        int indexDeLaProduccionQueReduce = -1;
+        /*
+         *  Esto funciona porque es una lista, y van a estar ordenados durante ejecuccion a menos que los toquemos.
+         */
+        for (int j = 0; j < gramatica.getProducciones().size(); j++) {
+            Produccion produccionAReducir = gramatica.getProducciones().get(j);
+            if (produccionAReducir.getBody().equals(bodyABuscar)){
+                indexDeLaProduccionQueReduce = j;
+                break;
+            }
+        }
+        for (int k = 1; k <  tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1].length; k++) {
+            if (tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] == null)
+                tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] = "r"+indexDeLaProduccionQueReduce;
+            else
+                throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era" + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] );
+        }
+    }
+
+    private void asignarAccept(String[][] tablaAction, Nodo nodo, Produccion produccion) {
+        if (produccion.getBody().get(produccion.getBody().size()-2).equals(Gramatica.SIGNO_DISTINGUIDO) &&
+                produccion.getBody().get(produccion.getBody().size()-1).equals(Gramatica.PIVOTE))
+            if (tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] == null)
+                tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] = "ACCEPT";
+            else
+                throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era " + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] );
+    }
 
     private boolean esSimboolNoTerminal(String str){
         Pattern patternNoTerminal = Pattern.compile("[a-z]+");
         Matcher matcher = patternNoTerminal.matcher(str);
         return matcher.matches();
     }
-
 
     private int indexDelSimbolo(String simboloTransicionDeTransicion, String[][] tablaAction) {
         int index = -1;
