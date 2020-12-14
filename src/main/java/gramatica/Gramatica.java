@@ -69,6 +69,7 @@ public class Gramatica {
     }
 
     public void eliminarE() {
+
          List<Character> N = new ArrayList<>();
 
          //1º Agrego los simbolos que derivan directamente vacio
@@ -97,7 +98,6 @@ public class Gramatica {
         	 for (Character simboloNulleable : N) {
         		 strings = obtenerCombinacionesNullables(produccion, simboloNulleable);
         	 }
-        	 System.out.println(strings);
         	 for (String string : strings) {
         		 List<Character> simbolos = new ArrayList<>();
         		 for (int i = 0 ; i < string.length(); i++)
@@ -110,6 +110,8 @@ public class Gramatica {
          if (prods.size() > 0)
         	 setProducciones(prods);
     }
+
+
     
     private List<String> obtenerCombinacionesNullables(Produccion produccion, Character simboloNulleable) {
         List<String> strings = new ArrayList<>();

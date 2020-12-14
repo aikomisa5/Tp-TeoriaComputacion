@@ -1,0 +1,6 @@
+S -> ABCZXY
+A -> aAc
+A -> E
+B -> B
+B -> E
+C -> E
