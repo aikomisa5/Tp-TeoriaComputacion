@@ -64,8 +64,22 @@ public class TestEjercicio3_1 {
     }
 
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testGramatica_0_NoEsLR0() throws FileNotFoundException, BadFileException {
+
+        System.out.println("--------------------------");
+        System.out.println("testGramatica_0_NoEsLR0");
+        System.out.println("--------------------------");
+
+        Gramatica gramatica = parserLR0Service.getGramaticaFromTxtFile("lr0_1_noLR0.txt");
+
+        ParserSLR parserSLR = new ParserSLR(gramatica);
+        parserSLR.generarParserLR0();
+
+    }
+
     @Test
-    public void testGramatica_0_ConstruccionAFD() throws FileNotFoundException, BadFileException, IllegalAccessException {
+    public void testGramatica_0_ConstruccionAFD() throws FileNotFoundException, BadFileException {
 
         System.out.println("--------------------------");
         System.out.println("testGramatica_0_ConstruccionAFD");

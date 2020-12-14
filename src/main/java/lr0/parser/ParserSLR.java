@@ -41,7 +41,7 @@ public class ParserSLR {
         this.afd = afd;
     }
 
-    public void generarParserLR0() throws IllegalAccessException {
+    public void generarParserLR0()  {
         this.afd = construirAFD();
         Set<String> simbolosTerminales = new HashSet<>();
 
@@ -83,7 +83,7 @@ public class ParserSLR {
 
     }
 
-    private void armarTablaAction(String[][] tablaAction) throws IllegalAccessException {
+    private void armarTablaAction(String[][] tablaAction) {
         for (Nodo nodo : afd.getNodos()) {
             for (Produccion produccion : nodo.getGramatica().getProducciones()) {
                 // si no está en el final
@@ -112,7 +112,7 @@ public class ParserSLR {
                         if (tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] == null)
                         tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] = "r"+indexDeLaProduccionQueReduce;
                         else
-                            throw new IllegalAccessException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era" + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] );
+                            throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era" + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][k] );
                     }
                 }
                 //hay que aceptar.
@@ -122,14 +122,14 @@ public class ParserSLR {
                         if (tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] == null)
                             tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] = "ACCEPT";
                         else
-                            throw new IllegalAccessException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era " + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] );
+                            throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).\n la action era " + tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1][tablaAction[0].length-1] );
                 }
             }
 
         }
     }
 
-    private void asignarShift(String[][] tablaAction, Nodo nodo, Produccion produccion, int indexDelPivote) throws IllegalAccessException {
+    private void asignarShift(String[][] tablaAction, Nodo nodo, Produccion produccion, int indexDelPivote) {
         boolean hayTransicionAlProximoSimbolo = false;
         String simboloTransicionDeTransicion;
         simboloTransicionDeTransicion = produccion.getBody().get(indexDelPivote).substring(1);
@@ -149,7 +149,7 @@ public class ParserSLR {
                     tablaAction[Integer.parseInt(nodo.getNombreEstado()) + 1]
                             [indexDelSimbolo(simboloTransicionDeTransicion, tablaAction)] = "s" + nodoDestinoNombre;
                 else
-                    throw new IllegalAccessException("Ya habia una action, hay conflicto. la Gramática no es LR(0).");
+                    throw new IllegalArgumentException("Ya habia una action, hay conflicto. la Gramática no es LR(0).");
             }
         }
     }
@@ -218,17 +218,9 @@ public class ParserSLR {
         gramaticaAFD_I0.setProducciones(produccionesN0);
 
         //Agrego nodo estado inicial
-        Nodo n0 = new Nodo("0",gramaticaAFD_I0);
+        creacionClausuraYAgregadoalAFDPrimerNodo(afd, gramaticaAFD_I0);
 
-        n0.clausura(gramatica);
-
-        afd.getNodos().add(n0);
-        Set<String> setDeSimbolosConPivote = getSimbolosConPivote(n0);
-
-        contador = (Integer.parseInt(n0.getNombreEstado()));
-
-        crearNodosYTransiciones(afd, setDeSimbolosConPivote, n0);
-
+        Set<String> setDeSimbolosConPivote;
         int i = 1;
         while( i < afd.getNodos().size()){
             Nodo nodoAlQueVamosAHacerleGoTo = afd.getNodos().get(i);
@@ -279,6 +271,19 @@ public class ParserSLR {
         imprimirAFD(afd);
 
         return  afd;
+    }
+
+    private void creacionClausuraYAgregadoalAFDPrimerNodo(AFD afd, Gramatica gramaticaAFD_I0) {
+        Nodo n0 = new Nodo("0", gramaticaAFD_I0);
+
+        n0.clausura(gramatica);
+
+        afd.getNodos().add(n0);
+        Set<String> setDeSimbolosConPivote = getSimbolosConPivote(n0);
+
+        contador = (Integer.parseInt(n0.getNombreEstado()));
+
+        crearNodosYTransiciones(afd, setDeSimbolosConPivote, n0);
     }
 
     private void imprimirAFD(AFD afd) {
