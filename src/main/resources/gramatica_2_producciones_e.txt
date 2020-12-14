@@ -1,6 +1,6 @@
-S -> ABC
-A -> aA
+S -> ABCZXY
+A -> aAc
 A -> E
-B -> bB
+B -> B
 B -> E
 C -> E
