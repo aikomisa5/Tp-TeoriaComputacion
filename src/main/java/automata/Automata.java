@@ -95,8 +95,6 @@ public class Automata {
 
 		boolean response = false;
 
-//		Automata e_afnd = service.getAutomataFromTxtFile("automata.txt");
-//		Automata afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 		response = service.cadenaPerteneceAlAFD(w, this);
 
 		return response;
@@ -145,6 +143,4 @@ public class Automata {
 		
 		return true;
 	}
-	
-	
 }

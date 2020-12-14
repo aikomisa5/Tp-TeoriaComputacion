@@ -23,6 +23,7 @@ import org.junit.runners.Suite;
 	TestEjercicio2b_3.class,
 	TestEjercicio2b_4.class,
 	TestEjercicio2b_5.class,
+	TestEjercicio3_1.class
 })
 class TestSuite {
 }
