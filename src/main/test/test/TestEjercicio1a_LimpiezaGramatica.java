@@ -30,12 +30,12 @@ public class TestEjercicio1a_LimpiezaGramatica {
 	public void limpiezaGramatica1Test() {
 		System.out.println(LINEA);
 		System.out.println("Nueva gramática");
-		gramatica.eliminarE();
-//		gramatica.eliminarProduccionesUnitarias();
+//		gramatica.eliminarE();
+////		gramatica.eliminarProduccionesUnitarias();
 		gramaticaService.printGramatica(gramatica);
-//		gramatica.eliminarProduccionesUnitarias();
-//		gramatica.eliminarSimbolosNoGeneradores();
-//		gramatica.eliminarSimbolosNoAlcanzables();
+////		gramatica.eliminarProduccionesUnitarias();
+////		gramatica.eliminarSimbolosNoGeneradores();
+////		gramatica.eliminarSimbolosNoAlcanzables();
 		
 	}
 }

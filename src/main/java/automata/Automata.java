@@ -35,33 +35,6 @@ public class Automata {
 		estadoInicial = new String();
 	}
 	
-	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
-			List<Transicion> transiciones) {
-		super();
-		this.service = new AutomataService();
-		this.simbolosInput = simbolosInput;
-		this.cantEstados = cantEstados;
-		this.estadosFinales = estadosFinales;
-		this.transiciones = transiciones;
-		this.estados = new ArrayList<String>();
-		this.estadosListado = new ArrayList<List<String>>();
-		this.estadoInicial = new String();
-	}
-	
-	public Automata(List<String> simbolosInput, int cantEstados, List<String> estadosFinales,
-			List<Transicion> transiciones, List<String> estados, List<List<String>> estadosListado,
-			String estadoInicial) {
-		super();
-		this.service = new AutomataService();
-		this.simbolosInput = simbolosInput;
-		this.cantEstados = cantEstados;
-		this.estadosFinales = estadosFinales;
-		this.transiciones = transiciones;
-		this.estados = estados;
-		this.estadosListado = estadosListado;
-		this.estadoInicial = estadoInicial;
-	}
-
 	public List<String> getSimbolosInput() {
 		return simbolosInput;
 	}
@@ -122,8 +95,6 @@ public class Automata {
 
 		boolean response = false;
 
-//		Automata e_afnd = service.getAutomataFromTxtFile("automata.txt");
-//		Automata afd = service.getAFD(e_afnd.getTransiciones(), e_afnd.getSimbolosInput(), e_afnd.getEstadosFinales(), e_afnd.getCantEstados());
 		response = service.cadenaPerteneceAlAFD(w, this);
 
 		return response;
@@ -172,6 +143,4 @@ public class Automata {
 		
 		return true;
 	}
-	
-	
 }
