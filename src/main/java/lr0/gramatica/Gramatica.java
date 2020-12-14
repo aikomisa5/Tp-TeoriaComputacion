@@ -61,16 +61,12 @@ public class Gramatica {
                 p.setBody(simbolosOriginal);
                 p.setVariable(variableOriginal);
 
-
-
                 if (p.getBody().get(0).charAt(0) != Gramatica.PIVOTE.charAt(0)){
                     String newPrimerSimbolo = Gramatica.PIVOTE + p.getBody().get(0);
                     p.getBody().remove(0);
                     p.getBody().add(0, newPrimerSimbolo);
-
                     result.add(p);
                 }
-
             }
         }
 
