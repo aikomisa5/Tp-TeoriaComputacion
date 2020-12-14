@@ -29,8 +29,6 @@ public class TestEjercicio3_1 {
 
         try {
             parserLR0Service.getGramaticaFromTxtFile("lr0_3.txt");
-        } catch (FileNotFoundException e) {
-            result = false;
         } catch (BadFileException e2) {
             result = false;
         }

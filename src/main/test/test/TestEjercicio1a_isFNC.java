@@ -11,96 +11,65 @@ import static org.junit.Assert.*;
 
 public class TestEjercicio1a_isFNC {
 
-    GramaticaService gramaticaService = new GramaticaService();
+	GramaticaService gramaticaService = new GramaticaService();
 
-    @Test
-    public void isInFnc1Test()
-    {
-        boolean result = true;
-        Gramatica gramatica = null;
-        try {
-            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_fnctest_1.txt");
-        }catch (FileNotFoundException e){
-            result = false;
-        }catch (BadFileException e2){
-            result = false;
-        }
+	@Test
+	public void isInFnc1Test() throws FileNotFoundException, BadFileException
+	{
+		boolean result = true;
+		Gramatica gramatica = null;
 
+		gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_fnctest_1.txt");
 
-        assertTrue(result);
-        assertTrue(gramatica.isInFNC());
+		assertTrue(result);
+		assertTrue(gramatica.isInFNC());
+	}
 
-    }
+	@Test
+	public void isInFnc2Test() throws FileNotFoundException, BadFileException
+	{
+		boolean result = true;
+		Gramatica gramatica = null;
 
-    @Test
-    public void isInFnc2Test()
-    {
-        boolean result = true;
-        Gramatica gramatica = null;
-        try {
-            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_fnctest_2.txt");
-        }catch (FileNotFoundException e){
-            result = false;
-        }catch (BadFileException e2){
-            result = false;
-        }
+		gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_fnctest_2.txt");
 
-        assertTrue(result);
-        assertTrue(gramatica.isInFNC());
+		assertTrue(result);
+		assertTrue(gramatica.isInFNC());
+	}
 
-    }
+	@Test
+	public void isInFnc3Test() throws FileNotFoundException, BadFileException
+	{
+		boolean result = true;
+		Gramatica gramatica = null;
 
-    @Test
-    public void isInFnc3Test()
-    {
-        boolean result = true;
-        Gramatica gramatica = null;
-        try {
-            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_fnctest_3.txt");
-        }catch (FileNotFoundException e){
-            result = false;
-        }catch (BadFileException e2){
-            result = false;
-        }
+		gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_fnctest_3.txt");
 
-        assertTrue(result);
-        assertTrue(gramatica.isInFNC());
+		assertTrue(result);
+		assertTrue(gramatica.isInFNC());
+	}
 
-    }
+	@Test
+	public void isNotInFnc1Test() throws FileNotFoundException, BadFileException
+	{
+		boolean result = true;
+		Gramatica gramatica = null;
 
-    @Test
-    public void isNotInFnc1Test()
-    {
-        boolean result = true;
-        Gramatica gramatica = null;
-        try {
-            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_isnotfnctest_1.txt");
-        }catch (FileNotFoundException e){
-            result = false;
-        }catch (BadFileException e2){
-            result = false;
-        }
+		gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_isnotfnctest_1.txt");
 
-        assertTrue(result);
-        assertTrue(!gramatica.isInFNC());
+		assertTrue(result);
+		assertFalse(gramatica.isInFNC());
+	}
 
-    }
+	@Test
+	public void isNotInFnc2Test() throws FileNotFoundException, BadFileException
+	{
+		boolean result = true;
+		Gramatica gramatica = null;
 
-    @Test
-    public void isNotInFnc2Test()
-    {
-        boolean result = true;
-        Gramatica gramatica = null;
-        try {
-            gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_isnotfnctest_2.txt");
-        }catch (FileNotFoundException e){
-            result = false;
-        }catch (BadFileException e2){
-            result = false;
-        }
+		gramatica = gramaticaService.getGramaticaFromTxtFile("gramatica_isnotfnctest_2.txt");
 
-        assertTrue(result);
-        assertTrue(!gramatica.isInFNC());
-
-    }
+		assertTrue(result);
+		assertFalse(gramatica.isInFNC());
+	}
 }
