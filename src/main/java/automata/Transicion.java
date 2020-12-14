@@ -1,17 +1,16 @@
 package automata;
 
-public class Proyeccion {
+public class Transicion implements Comparable<Transicion> {
 
-	//TODO cambiar nombre de la clase por Transicion. Luego cambiar en todo el proyecto las referencias a proyeccion por transicion y proyecciones por transiciones 
 	private String estadoSalida;
 	private String simboloInput;
 	private String estadoLlegada;
 	
-	public Proyeccion() {
+	public Transicion() {
 		super();
 	}
 
-	public Proyeccion(String estadoSalida, String simboloInput, String estadoLlegada) {
+	public Transicion(String estadoSalida, String simboloInput, String estadoLlegada) {
 		super();
 		this.estadoSalida = estadoSalida;
 		this.simboloInput = simboloInput;
@@ -53,7 +52,7 @@ public class Proyeccion {
             return false;
         }
         
-        final Proyeccion proyeccion = (Proyeccion) obj;
+        final Transicion proyeccion = (Transicion) obj;
         
         if (this.estadoSalida.equals(proyeccion.getEstadoSalida()) == false) {
         	return false;
@@ -68,5 +67,22 @@ public class Proyeccion {
         }
 		
 		return true;
+	}
+
+	@Override
+	public int compareTo(Transicion o) {
+		int result1 = this.estadoSalida.compareTo(o.estadoSalida);
+		
+		if (result1 != 0) {
+			return result1;
+		}
+		
+		int result2 = this.simboloInput.compareTo(o.simboloInput);
+		
+		if (result2 != 0) {
+			return result2;
+		}
+		
+		return this.estadoLlegada.compareTo(o.estadoLlegada);
 	}
 }
