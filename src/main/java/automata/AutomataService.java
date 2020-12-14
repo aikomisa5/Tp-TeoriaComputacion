@@ -16,8 +16,14 @@ import exceptions.BadFileException;
 
 public class AutomataService {
 
-	private static final String patternString = "[1-9]+,\\s[a-zA-Z]+\\s->\\s[1-9]+";
-	private static final String formatoTransicion = "NumeroEstadoSalida, SimboloInput -> NumeroEstadoLlegada. Ej: 4, E -> 4";
+	public static final String ERROR_CANT_ESTADOS = "Ocurrio un error al intentar obtener el dato de la cantidad de estados del archivo: ";
+	public static final String ERROR_EMPTY_FILE = "Ocurrio un error al intentar obtener los datos del automata del archivo, debido a que el archivo esta vacio";
+	private static final String patternSimbolosInput = "([a-zA-Z0-9]+,\\s)*[a-zA-Z0-9]{1}";
+	public static final String formatoSimbolosInput = "SimboloInput, SimboloInput, SimboloInput... Ej1: a, b, c. Ej2: a";
+	private static final String patternEstadosFinales = "([0-9]+,\\s)*[0-9]{1}";
+	public static final String formatoEstadosFinales = "EstadoFinal, EstadoFinal, EstadoFinal... Ej1: 1, 2, 3. Ej2: 1";
+	private static final String patternTransicion = "[1-9]+,\\s[a-zA-Z]+\\s->\\s[1-9]+";
+	public static final String formatoTransicion = "NumeroEstadoSalida, SimboloInput -> NumeroEstadoLlegada. Ej: 4, E -> 4";
 	private static final String EPSILON = "E";
 	private static final String ESTADO_INICIAL = "1";
 	private static final String ESTADO_TRAMPA = "T";
@@ -169,7 +175,7 @@ public class AutomataService {
 			myReader = new Scanner(myObj);
 
 			if (myReader.hasNextLine() == false) {
-				String msj = "Ocurrio un error al intentar obtener los datos del automata del archivo, debido a que el archivo esta vacio";
+				String msj = ERROR_EMPTY_FILE;
 				System.out.println(msj);
 				throw new BadFileException(msj);
 			}
@@ -180,10 +186,22 @@ public class AutomataService {
 				String data = myReader.nextLine();
 
 				if (indice == 0) {
+					
+					Pattern pattern = Pattern.compile(patternSimbolosInput);
+
+					Matcher matcher = pattern.matcher(data);
+					boolean matches = matcher.matches();
+
+					if (matches == false) {
+						String msj = "Ocurrio un error, los simbolos de input no cumplen con el formato necesario en el archivo. La misma debe ser de la forma: " + formatoSimbolosInput + ", y la misma es: " + data;
+						System.out.println(msj);
+						throw new BadFileException(msj);
+					}
+					
 					try {
-						List<String> trim = new ArrayList<String>(Arrays.asList(data.split(",")));
+						List<String> simbolosForTrim = new ArrayList<String>(Arrays.asList(data.split(",")));
 						List<String> simbolos = new ArrayList<String>();
-						for(String simbolo : trim) {
+						for(String simbolo : simbolosForTrim) {
 							simbolos.add(simbolo.trim());
 						}
 						afnd.setSimbolosInput(simbolos);
@@ -199,15 +217,31 @@ public class AutomataService {
 						afnd.setCantEstados(Integer.valueOf(data));
 					}
 					catch(Exception e) {
-						String msj = "Ocurrio un error al intentar obtener el dato de la cantidad de estados del archivo: " + e.getMessage();
+						String msj = ERROR_CANT_ESTADOS + e.getMessage();
 						System.out.println(msj);
 						throw new BadFileException(msj, e);
 					}
 				}
 
 				else if (indice == 2) {
+					
+					Pattern pattern = Pattern.compile(patternEstadosFinales);
+
+					Matcher matcher = pattern.matcher(data);
+					boolean matches = matcher.matches();
+
+					if (matches == false) {
+						String msj = "Ocurrio un error, los estados finales no cumplen con el formato necesario en el archivo. Los mismos deben ser de la forma: " + formatoEstadosFinales + ", y el mismo es: " + data;
+						System.out.println(msj);
+						throw new BadFileException(msj);
+					}
+					
 					try {
-						List<String> estadosFinales = new ArrayList<String>(Arrays.asList(data.split(",")));
+						List<String> estadosFinalesForTrim = new ArrayList<String>(Arrays.asList(data.split(",")));
+						List<String> estadosFinales = new ArrayList<String>();
+						for(String estado : estadosFinalesForTrim) {
+							estadosFinales.add(estado.trim());
+						}
 						afnd.setEstadosFinales(estadosFinales);
 					}
 					catch(Exception e) {
@@ -217,7 +251,7 @@ public class AutomataService {
 					}
 				}
 				else {
-					Pattern pattern = Pattern.compile(patternString);
+					Pattern pattern = Pattern.compile(patternTransicion);
 
 					Matcher matcher = pattern.matcher(data);
 					boolean matches = matcher.matches();
