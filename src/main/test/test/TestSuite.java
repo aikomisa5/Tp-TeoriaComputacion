@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 	TestEjercicio1a_isFNC.class,
 	TestEjercicio1a_noAlcanzables.class,
 	TestEjercicio1a_sinSimbolosInutiles.class,
+	TestEjercicio1a_LimpiezaGramatica_1.class,
 	TestEjercicio1b_1.class,
 	TestEjercicio1b_2.class,
 	TestEjercicio1b_3.class,
